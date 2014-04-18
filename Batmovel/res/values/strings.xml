@@ -4,5 +4,8 @@
     <string name="app_name">Batmovel</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_mode_chooser">ModeChooser</string>
+    <string name="hitch_ride">Pegar Carona</string>
+    <string name="give_ride">Dar Carona</string>
 
 </resources>
