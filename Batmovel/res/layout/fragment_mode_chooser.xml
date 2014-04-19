@@ -14,7 +14,7 @@
         android:id="@+id/give_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_action_hitchhike"
+        android:drawableLeft="@drawable/ic_action_give_ride"
         android:text="@string/give_ride"/>
 
     <Space
