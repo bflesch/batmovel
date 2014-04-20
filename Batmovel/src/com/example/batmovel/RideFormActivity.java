@@ -1,21 +1,22 @@
 package com.example.batmovel;
 
 import android.app.Activity;
+import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Build;
 
-public class ModeChooser extends Activity {
+public class RideFormActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mode_chooser);
+		setContentView(R.layout.activity_ride_form);
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -27,7 +28,7 @@ public class ModeChooser extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.mode_chooser, menu);
+		getMenuInflater().inflate(R.menu.ride_form, menu);
 		return true;
 	}
 
@@ -42,18 +43,7 @@ public class ModeChooser extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	//TODO mudar o nome do metodo
-	public void changeToRideList(View view){
-		Intent intent = new Intent(this, RideListActivity.class);
-		startActivity(intent);
-	}
 
-	public void changeToRideForm (View view) {
-		Intent intent = new Intent(this, RideFormActivity.class);
-		startActivity(intent);		
-	}
-	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
@@ -65,7 +55,7 @@ public class ModeChooser extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_mode_chooser,
+			View rootView = inflater.inflate(R.layout.fragment_ride_form,
 					container, false);
 			return rootView;
 		}

@@ -7,6 +7,7 @@
     <string name="title_activity_mode_chooser">ModeChooser</string>
     <string name="hitch_ride">Pegar Carona</string>
     <string name="give_ride">Dar Carona</string>
-    <string name="connection_error">Erro na conexão</string>
+    <string name="connection_error">Erro na conexao</string>
+    <string name="title_activity_ride_form">RideFormActivity</string>
 
 </resources>
