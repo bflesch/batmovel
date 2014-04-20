@@ -44,7 +44,7 @@ public class ModeChooser extends Activity {
 	}
 	
 	public void changeToMain(View view){
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, RideListActivity.class);
 		startActivity(intent);
 	}
 
