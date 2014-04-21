@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mLogin;
 	private String mPassword;
 
 	// UI references.
@@ -44,42 +44,61 @@ public class LoginActivity extends Activity {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
+	private String username;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_login);
+		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+		username = settings.getString("username", null);
 
-		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		//if (username == null){
 
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView textView, int id,
-					KeyEvent keyEvent) {
-				if (id == R.id.login || id == EditorInfo.IME_NULL) {
-					attemptLogin();
-					return true;
-				}
-				return false;
-			}
-		});
+			setContentView(R.layout.activity_login);
 
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+			// Set up the login form.
+			mLogin = getIntent().getStringExtra(EXTRA_EMAIL);
+			mEmailView = (EditText) findViewById(R.id.email);
+			mEmailView.setText(mLogin);
 
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
+			mPasswordView = (EditText) findViewById(R.id.password);
+			mPasswordView
+			.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView textView, int id,
+						KeyEvent keyEvent) {
+					if (id == R.id.login || id == EditorInfo.IME_NULL) {
 						attemptLogin();
+						return true;
 					}
-				});
+					return false;
+				}
+			});
+
+			mLoginFormView = findViewById(R.id.login_form);
+			mLoginStatusView = findViewById(R.id.login_status);
+			mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+
+			findViewById(R.id.sign_in_button).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							attemptLogin();
+						}
+					});
+		//}
+		//else{
+			//setContentView(R.layout.activity_logout);
+		//}
+	}
+
+	@Override
+	protected void onStart(){
+		super.onStart();
+		//if (username != null) {
+		//	changeToModeChooser();
+		//}
 	}
 
 	@Override
@@ -110,7 +129,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mLogin = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -128,7 +147,7 @@ public class LoginActivity extends Activity {
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
+		if (TextUtils.isEmpty(mLogin)) {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
@@ -197,7 +216,7 @@ public class LoginActivity extends Activity {
 	private void saveCredentials(){
 		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("username", mEmail);
+		editor.putString("username", mLogin);
 
 		// Commit the edits!
 		editor.commit();
@@ -215,7 +234,7 @@ public class LoginActivity extends Activity {
 
 			try {
 				WebClient wc = new WebClient(AUTHENTICATION_URL);
-				String response = wc.postHttps(mEmail,mPassword);
+				String response = wc.postHttps(mLogin,mPassword);
 
 				JSONObject josie = new JSONObject(response);
 				Boolean wasOK = josie.getBoolean("ok");
