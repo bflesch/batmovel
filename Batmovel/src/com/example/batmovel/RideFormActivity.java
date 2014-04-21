@@ -23,6 +23,9 @@ import android.widget.EditText;
 import android.os.Build;
 
 public class RideFormActivity extends Activity {
+	
+	final static String URL_POST = "http://uspservices.deusanyjunior.dj/carona";
+	
 	//TODO campos obrigatorios
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,47 +86,19 @@ public class RideFormActivity extends Activity {
 		}
 	}
 
-    private class uploadJsonTask extends AsyncTask<String, Void, String> {
+    private class uploadJsonTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        protected String doInBackground(String... json_is_in_zero) {
+        protected Boolean doInBackground(String... json_is_in_zero) {
     		//TODO funcionou ou não, jacaré ?
-    		String url="http://uspservices.deusanyjunior.dj/carona";
-    		try {
-    			URL object = new URL(url);
-    			HttpURLConnection con = (HttpURLConnection) object.openConnection();
-    			con.setDoOutput(true);
-    			con.setRequestProperty("Content-Type", "application/json");
-    			OutputStream stream = con.getOutputStream();
-    			OutputStreamWriter wr= new OutputStreamWriter(stream);
-    			wr.write(json_is_in_zero[0]);
-    			wr.flush();
-    			wr.close();
-
-    			BufferedReader in = new BufferedReader(
-    			        new InputStreamReader(con.getInputStream()));
-    			String inputLine;
-    			StringBuffer response = new StringBuffer();
-    	 
-    			while ((inputLine = in.readLine()) != null) {
-    				response.append(inputLine);
-    			}
-    			in.close();
-    	 
-    			//print result
-    			System.err.println(response.toString());
-    			//TODO verificar sucesso no envio
-    			
-    			con.disconnect();
-    			return "true";
-         	} catch (Exception e) {
-    			return "false";
-    		}         
+    			WebClient wc = new WebClient(URL_POST);
+    			wc.postJson(json_is_in_zero[0]);
+    			return true;
         }
 
         //TODO seria legal usar para alguma coisa...
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Boolean result) {
         }
     }
 
