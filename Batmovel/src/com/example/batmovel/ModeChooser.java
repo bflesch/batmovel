@@ -23,7 +23,7 @@ public class ModeChooser extends Activity {
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
@@ -55,12 +55,18 @@ public class ModeChooser extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	public void changeToMain(View view){
+	
+	//TODO mudar o nome do metodo
+	public void changeToRideList(View view){
 		Intent intent = new Intent(this, RideListActivity.class);
 		startActivity(intent);
 	}
 
+	public void changeToRideForm (View view) {
+		Intent intent = new Intent(this, RideFormActivity.class);
+		startActivity(intent);		
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
@@ -72,7 +78,8 @@ public class ModeChooser extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_mode_chooser, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_mode_chooser,
+					container, false);
 			return rootView;
 		}
 	}

@@ -21,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_give_ride"
-        android:text="@string/give_ride" />
+        android:onClick="changeToRideForm"
+        android:text="@string/give_ride"/>
 
     <Space
         android:layout_width="match_parent"
@@ -32,7 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_hitchhike"
-        android:onClick="changeToMain"
-        android:text="@string/hitch_ride" />
-
+        android:text="@string/hitch_ride"
+        android:onClick="changeToRideList" />
 </LinearLayout>
