@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -20,13 +21,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.os.Build;
 
 public class RideFormActivity extends Activity {
 	
 	final static String URL_POST = "http://uspservices.deusanyjunior.dj/carona";
+	uploadJsonTask uploadTask = null;
 	
 	//TODO campos obrigatorios
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,19 +41,32 @@ public class RideFormActivity extends Activity {
 			.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		TextView date = (TextView) findViewById(R.id.ScrollView01).findViewById(R.id.tempo_de_partida);
+		Calendar c = Calendar.getInstance(); 
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int minute = c.get(Calendar.MINUTE);
+		String timeS = ""+hour+":"+minute;
+		date.setText(timeS);
+		//TODO escrever o numero de maneira nao escrota
+	}
 
 	protected String textViewIdToString(int id){
 		  EditText editText = (EditText) findViewById(id);
           return editText.getText().toString();
 	}
-	//TODO matar a thread
+	//TODO less ugly form
 	public void sendRide(View view){
 		Ride ride = new Ride(true); //TODO remover booleano
 		//TODO departure time
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
-		new uploadJsonTask().execute(ride.toJsonString());
+		uploadTask = new uploadJsonTask();
+		uploadTask.execute(ride.toJsonString());
 	}
 
 	@Override
@@ -58,6 +75,13 @@ public class RideFormActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.ride_form, menu);
 		return true;
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		if (uploadTask != null)
+		    uploadTask.cancel(true);
 	}
 
 	@Override
@@ -95,8 +119,9 @@ public class RideFormActivity extends Activity {
     			wc.postJson(json_is_in_zero[0]);
     			return true;
         }
-
-        //TODO seria legal usar para alguma coisa...
+        //TODO spinning for idleness
+        //TODO notificar sucesso
+        //TODO deixar os campos menos feios
         @Override
         protected void onPostExecute(Boolean result) {
         }

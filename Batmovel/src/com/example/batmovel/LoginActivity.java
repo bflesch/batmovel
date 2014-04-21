@@ -255,13 +255,17 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
+			//TODO desfoder
+			saveCredentials();
+			changeToModeChooser();
+			/*
 			if (success) {
 				saveCredentials();
 				changeToModeChooser();
 			} else {
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
-			}
+			}*/
 		}
 
 		@Override
