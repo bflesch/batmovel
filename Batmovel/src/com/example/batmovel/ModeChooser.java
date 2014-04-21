@@ -3,14 +3,18 @@ package com.example.batmovel;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class ModeChooser extends Activity {
+
+	public static final String SHARED_PREFS_NAME = "KINNEGAD";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +23,17 @@ public class ModeChooser extends Activity {
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+	}
+
+	@Override
+	protected void onStart(){
+		super.onStart();
+		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+		String username = settings.getString("username", "usuário");
+
+		((TextView) findViewById(R.id.greeting_area)).setText(username);
 	}
 
 	@Override
@@ -42,7 +55,7 @@ public class ModeChooser extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void changeToMain(View view){
 		Intent intent = new Intent(this, RideListActivity.class);
 		startActivity(intent);
@@ -59,8 +72,7 @@ public class ModeChooser extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_mode_chooser,
-					container, false);
+			View rootView = inflater.inflate(R.layout.fragment_mode_chooser, container, false);
 			return rootView;
 		}
 	}

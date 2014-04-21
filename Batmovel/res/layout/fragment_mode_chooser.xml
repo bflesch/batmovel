@@ -10,12 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.batmovel.ModeChooser$PlaceholderFragment" >
 
+    <TextView
+        android:id="@+id/greeting_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
     <Button
         android:id="@+id/give_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_give_ride"
-        android:text="@string/give_ride"/>
+        android:text="@string/give_ride" />
 
     <Space
         android:layout_width="match_parent"
@@ -26,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_hitchhike"
-        android:text="@string/hitch_ride"
-        android:onClick="changeToMain" />
+        android:onClick="changeToMain"
+        android:text="@string/hitch_ride" />
+
 </LinearLayout>
