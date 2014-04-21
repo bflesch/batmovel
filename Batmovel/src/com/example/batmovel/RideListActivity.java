@@ -35,7 +35,7 @@ import android.widget.TextView;
 public class RideListActivity extends Activity {
 
 	protected String JSONdata;
-	protected JsonDownloader balacobaco;
+	protected JsonDownloader downloader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class RideListActivity extends Activity {
 			CaronasFragment cf = new CaronasFragment();
 			getFragmentManager().beginTransaction().add(R.id.container, cf).commit();
 			RideRecordListAdapter adapter = new RideRecordListAdapter();
-			balacobaco = new JsonDownloader(adapter);
+			downloader = new JsonDownloader(adapter);
 			cf.setListAdapter(adapter);
 		}
 	}
@@ -54,7 +54,7 @@ public class RideListActivity extends Activity {
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
-		balacobaco.onDestroy();
+		downloader.onDestroy();
 	}
 
 	@Override
@@ -145,14 +145,12 @@ public class RideListActivity extends Activity {
 			return response;
 		}
 
-		// Checks the network connection and sets the connected variable accordingly.
 		private void updateConnectedFlag() {
 			ConnectivityManager connMgr = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
 			connected = (activeInfo != null && activeInfo.isConnected()); 
 		}
 
-		// Displays an error if the app is unable to load content.
 		private void showError() {
 			adapter.notifyError(R.string.connection_error); 
 		}
@@ -167,7 +165,6 @@ public class RideListActivity extends Activity {
 			adapter.notifyDataSetChanged();
 		}
 
-		//Implementation of AsyncTask used to download XML feed from stackoverflow.com.
 		private class DownloadJsonTask extends AsyncTask<String, Void, String> {
 
 			@Override 

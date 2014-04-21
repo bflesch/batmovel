@@ -9,9 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -44,15 +41,12 @@ public class RideFormActivity extends Activity {
 	}
 	//TODO matar a thread
 	public void sendRide(View view){
-		RideData ride = new RideData();
+		Ride ride = new Ride(true); //TODO remover booleano
 		//TODO departure time
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
-		JSONObject rideJ = ride.createJson();
-
-		new uploadJsonTask().execute(rideJ.toString());
-	
+		new uploadJsonTask().execute(ride.toJsonString());
 	}
 
 	@Override
@@ -75,9 +69,6 @@ public class RideFormActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
 	public static class PlaceholderFragment extends Fragment {
 
 		public PlaceholderFragment() {
@@ -92,38 +83,6 @@ public class RideFormActivity extends Activity {
 		}
 	}
 
-	public static class RideData {
-		//TODO des-hardecodear
-		public String n_usp = "5177188"; /*no jason, driver*/
-		public String login = "josinalvo"; /*nome_de_usuario_no_stoa */
-		public String departuretime = "2014-04-19T23:55:00Z";
-		public String local_partida = ""; /*no json, actuallocalization*/
-		public String local_chegada = ""; /*no jason, targetlocalization*/
-		public String message= "";
-		
-		//TODO exigir campos exigidos
-
-		public JSONObject createJson() {
-			JSONObject json = new JSONObject();
-			JSONObject recordJson = new JSONObject();
-			try {
-				recordJson.put("driver", n_usp);
-				recordJson.put("login", login);
-				recordJson.put("actuallocalization", local_partida);
-				recordJson.put("targetlocalization", local_chegada);
-				recordJson.put("departuretime", departuretime);
-				recordJson.put("message", message);
-				json.put("riderecord",recordJson);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			return json;
-		}
-		// TODO pensar na interacao do usuario com essa componente
-	}
-	
-    // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
     private class uploadJsonTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -135,8 +94,6 @@ public class RideFormActivity extends Activity {
     			HttpURLConnection con = (HttpURLConnection) object.openConnection();
     			con.setDoOutput(true);
     			con.setRequestProperty("Content-Type", "application/json");
-    			//con.setRequestProperty("Content-Length", ""+json_is_in_zero[0].length());
-    			//con.setRequestMethod("POST");
     			OutputStream stream = con.getOutputStream();
     			OutputStreamWriter wr= new OutputStreamWriter(stream);
     			wr.write(json_is_in_zero[0]);

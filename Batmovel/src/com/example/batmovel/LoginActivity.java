@@ -57,17 +57,17 @@ public class LoginActivity extends Activity {
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
+		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id,
+					KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
@@ -81,7 +81,7 @@ public class LoginActivity extends Activity {
 					}
 				});
 	}
-	
+
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -162,25 +162,25 @@ public class LoginActivity extends Activity {
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
+			.alpha(show ? 1 : 0)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginStatusView.setVisibility(show ? View.VISIBLE
+							: View.GONE);
+				}
+			});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
+			.alpha(show ? 0 : 1)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginFormView.setVisibility(show ? View.GONE
+							: View.VISIBLE);
+				}
+			});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
@@ -188,19 +188,19 @@ public class LoginActivity extends Activity {
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
-	
+
 	private void changeToModeChooser(){
 		Intent intent = new Intent(this, ModeChooser.class);
 		startActivity(intent);
 	}
-	
-	private void saveCredentials(){
-	      SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
-	      SharedPreferences.Editor editor = settings.edit();
-	      editor.putString("username", mEmail);
 
-	      // Commit the edits!
-	      editor.commit();
+	private void saveCredentials(){
+		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("username", mEmail);
+
+		// Commit the edits!
+		editor.commit();
 	}
 
 	/**
@@ -212,31 +212,22 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
 
 			try {
-			
-			WebClient wc = new WebClient(AUTHENTICATION_URL);
-			String response = wc.postHttps(mEmail,mPassword);
-			
-			JSONObject josie = new JSONObject(response);
-			Boolean wasOK = josie.getBoolean("ok");
-			if (wasOK)
-				return true;
-			
+				WebClient wc = new WebClient(AUTHENTICATION_URL);
+				String response = wc.postHttps(mEmail,mPassword);
+
+				JSONObject josie = new JSONObject(response);
+				Boolean wasOK = josie.getBoolean("ok");
+
+				if (wasOK) {
+					return true;
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			/*for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}*/
-			
+
 			return false;
 		}
 
@@ -249,8 +240,7 @@ public class LoginActivity extends Activity {
 				saveCredentials();
 				changeToModeChooser();
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
 		}
