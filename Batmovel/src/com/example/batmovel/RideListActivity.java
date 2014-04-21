@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,11 +14,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ListActivity;
 //import android.app.ActionBar;
 //import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -29,10 +33,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 //import android.os.Build;
 
-public class RideListActivity extends Activity {
+public class RideListActivity extends ListActivity {
 
 	protected String JSONdata;
 	protected JsonDownloader downloader;
@@ -43,14 +48,12 @@ public class RideListActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
-			CaronasFragment cf = new CaronasFragment();
-			getFragmentManager().beginTransaction().add(R.id.container, cf).commit();
 			RideRecordListAdapter adapter = new RideRecordListAdapter();
+			setListAdapter(adapter);
 			downloader = new JsonDownloader(adapter);
-			cf.setListAdapter(adapter);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -80,7 +83,7 @@ public class RideListActivity extends Activity {
 		this.JSONdata = str;
 	}
 
-	
+
 	public class JsonDownloader {
 		private static final String URL =
 				"http://uspservices.deusanyjunior.dj/carona/3.json";
@@ -214,18 +217,23 @@ public class RideListActivity extends Activity {
 			}
 		}
 	}
-	
+
 	public class RideRecordListAdapter extends BaseAdapter {
 
-		JSONArray data = new JSONArray();
+		JSONArray jsonData = new JSONArray();
+		ArrayList<Ride> data = new ArrayList<Ride>();
 		boolean hasError = false;
 		String errorMessage = "";
-		
+
 
 		public void setData(String json_string){
 			try {
 				JSONObject object = new JSONObject(json_string);
-				this.data = object.getJSONArray("riderecordlist");
+				this.jsonData = object.getJSONArray("riderecordlist");
+				this.data = new ArrayList<Ride>();
+				for(int i=0; i<jsonData.length(); i++){
+					data.add(new Ride(jsonData.getJSONObject(i).toString()));
+				}
 			}
 			catch (JSONException e){
 				e.printStackTrace();
@@ -234,55 +242,17 @@ public class RideListActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			return data.length();
+			return data.size();
 		}
 
 		@Override
-		public String getItem(int arg0) {
-			try {
-				return data.get(arg0).toString();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
+		public Ride getItem(int arg0) {
+			return data.get(arg0);
 		}
 
 		@Override
 		public long getItemId(int arg0) {
-			try {
-				return data.get(arg0).hashCode();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return 0;
-		}
-
-		public String getDestination(JSONObject record) throws JSONException {
-			String destination;
-
-			destination = record.getString("targetlocalization");
-
-			return destination;
-		}
-
-		public String getInfo(JSONObject record) throws JSONException {
-			String user;
-			String origin;
-
-			user = record.getString("login");
-			origin = record.getString("actuallocalization");
-
-			return user + ", out of " + origin;
-		}
-
-		public String getMessage(JSONObject record) throws JSONException {
-			String message;
-
-			message = record.getString("message");
-
-			return message;
+			return data.get(arg0).hashCode();
 		}
 
 		@Override
@@ -291,21 +261,15 @@ public class RideListActivity extends Activity {
 				convertView = ((LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_carona_list_item, container, false);
 			}
 
-			JSONObject record;
-			try {
-				record = data.getJSONObject(position).getJSONObject("riderecord");
-				((TextView) convertView.findViewById(R.id.destination))
-				.setText(getDestination(record));
+			Ride ride = data.get(position);
+			((TextView) convertView.findViewById(R.id.destination))
+			.setText(ride.local_chegada);
 
-				((TextView) convertView.findViewById(R.id.info))
-				.setText(getInfo(record));
+			((TextView) convertView.findViewById(R.id.info))
+			.setText(ride.n_usp + ", saindo de " + ride.local_partida);
 
-				((TextView) convertView.findViewById(R.id.message))
-				.setText(getMessage(record));
-			}
-			catch (JSONException e ){
-				e.printStackTrace();
-			}
+			((TextView) convertView.findViewById(R.id.message))
+			.setText(ride.message);
 
 			return convertView;
 		}
@@ -325,7 +289,33 @@ public class RideListActivity extends Activity {
 
 	}
 
-	public static class CaronasFragment extends ListFragment {
+	public static class ConfirmHitchhikeDialogFragment extends DialogFragment {
+		private CharSequence message;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(this.message)
+			.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				}
+			})
+			.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				}
+			});
+			return builder.create();
+		}
+
+		public void setPayload(Ride r) {
+			this.message = "Você aceita a carona para " + r.local_chegada + " oferecida por " + r.n_usp + "?";
+		}
 	}
 
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id){
+		ConfirmHitchhikeDialogFragment f = new ConfirmHitchhikeDialogFragment();
+		f.setPayload((Ride) l.getItemAtPosition(position));
+		(f).show(getFragmentManager(), "Brocolis");
+	}
 }
