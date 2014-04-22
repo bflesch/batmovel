@@ -45,7 +45,7 @@ public class RideListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_ride_list);
 
 		if (savedInstanceState == null) {
 			RideRecordListAdapter adapter = new RideRecordListAdapter();
@@ -82,8 +82,16 @@ public class RideListActivity extends ListActivity {
 	public void notifyUpdate(String str){
 		this.JSONdata = str;
 	}
+	
+	public void confirmHitchhike(Ride r){
+		RideInterest interest = new RideInterest(r);
+		interest.hitchhiker = getCurrentUser().uspNumber;
+	}
 
-
+	private User getCurrentUser() {
+		return ((HitchhikingApplication) getApplication()).getCurrentUser();
+	}
+	
 	public class JsonDownloader {
 		private static final String URL =
 				"http://uspservices.deusanyjunior.dj/carona/3.json";
@@ -109,7 +117,8 @@ public class RideListActivity extends ListActivity {
 		}
 
 		public void onDestroy() {
-			timer.cancel();
+			if (timer != null)
+				timer.cancel();
 		}
 
 		private String convertStreamToString(InputStream is) {
@@ -262,11 +271,18 @@ public class RideListActivity extends ListActivity {
 			}
 
 			Ride ride = data.get(position);
+			String driverName;
+			
+			if ((ride.login != null) && (!ride.login.isEmpty()))
+				driverName = ride.login;
+			else
+				driverName = ride.n_usp;
+			
 			((TextView) convertView.findViewById(R.id.destination))
 			.setText(ride.local_chegada);
 
 			((TextView) convertView.findViewById(R.id.info))
-			.setText(ride.n_usp + ", saindo de " + ride.local_partida);
+			.setText(driverName + ", saindo de " + ride.local_partida);
 
 			((TextView) convertView.findViewById(R.id.message))
 			.setText(ride.message);
