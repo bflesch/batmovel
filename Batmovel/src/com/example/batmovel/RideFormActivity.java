@@ -8,13 +8,18 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.os.Build;
 
 public class RideFormActivity extends Activity {
@@ -30,6 +36,9 @@ public class RideFormActivity extends Activity {
 	
 	//TODO campos obrigatorios
 
+	public int selected_hour;
+	public int selected_minute;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,29 +50,61 @@ public class RideFormActivity extends Activity {
 		}
 	}
 	
+	private String fill (int n) {
+		if (n < 10)
+			return "0"+n;
+		return ""+n;
+	}
+	
+	private void setFormTime () {
+		TextView date = (TextView) findViewById(R.id.ScrollView01).findViewById(R.id.tempo_de_partida);
+		String hourS = fill(selected_hour);
+		String minuteS = fill(selected_minute);
+		String timeS = ""+hourS+":"+minuteS;
+		date.setText(timeS);
+	}
+	
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		TextView date = (TextView) findViewById(R.id.ScrollView01).findViewById(R.id.tempo_de_partida);
+		
 		Calendar c = Calendar.getInstance(); 
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		int minute = c.get(Calendar.MINUTE);
-		String timeS = ""+hour+":"+minute;
-		date.setText(timeS);
-		//TODO escrever o numero de maneira nao escrota
+		selected_hour = c.get(Calendar.HOUR_OF_DAY);
+		selected_minute = c.get(Calendar.MINUTE);
+		setFormTime();
+
+		
 	}
 
-	protected String textViewIdToString(int id){
+	private String textViewIdToString(int id){
 		  EditText editText = (EditText) findViewById(id);
           return editText.getText().toString();
 	}
-	//TODO less ugly form
+	
+	private String build_datetime(){
+		Calendar rideCal = Calendar.getInstance();
+		rideCal.setLenient(true); //testar isso!
+		rideCal.set(Calendar.HOUR_OF_DAY,selected_hour);
+		rideCal.set(Calendar.MINUTE,selected_minute);
+		Calendar rightNow = Calendar.getInstance();
+		
+		if (rightNow.compareTo(rideCal) == 1) {
+			//Horario indicado é antes do horario atual (hopefully)
+			rideCal.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+		String dateIso = df.format(rideCal.getTime());
+		return dateIso;
+	} 
+	
 	public void sendRide(View view){
 		Ride ride = new Ride(true); //TODO remover booleano
 		//TODO departure time
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
+		ride.departuretime = build_datetime();
 		uploadTask = new uploadJsonTask();
 		uploadTask.execute(ride.toJsonString());
 	}
@@ -81,6 +122,11 @@ public class RideFormActivity extends Activity {
 		super.onDestroy();
 		if (uploadTask != null)
 		    uploadTask.cancel(true);
+	}
+	
+	public void showTimePickerDialog(View v) {
+	    DialogFragment newFragment = new TimePickerFragment();
+	    newFragment.show(getFragmentManager(), "timePicker");
 	}
 
 	@Override
@@ -109,6 +155,28 @@ public class RideFormActivity extends Activity {
 		}
 	}
 
+
+	public static class TimePickerFragment extends DialogFragment
+	implements TimePickerDialog.OnTimeSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Create a new instance of TimePickerDialog and return it
+			RideFormActivity parentActivity = (RideFormActivity) getActivity();
+			return new TimePickerDialog(parentActivity, this, parentActivity.selected_hour, parentActivity.selected_minute,
+					DateFormat.is24HourFormat(parentActivity));
+		}
+
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			RideFormActivity parentActivity = (RideFormActivity) getActivity();
+			parentActivity.selected_hour = hourOfDay;
+			parentActivity.selected_minute = minute;
+			parentActivity.setFormTime();
+		}
+	}
+	
+	
+	
     private class uploadJsonTask extends AsyncTask<String, Void, String> {
 
         @Override
