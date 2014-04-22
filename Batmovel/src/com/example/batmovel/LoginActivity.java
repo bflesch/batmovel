@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
 	private String mPassword;
 
 	// UI references.
-	private EditText mEmailView;
+	private EditText mLoginView;
 	private EditText mPasswordView;
 	private View mLoginFormView;
 	private View mLoginStatusView;
@@ -59,8 +59,8 @@ public class LoginActivity extends Activity {
 
 			// Set up the login form.
 			mLogin = getIntent().getStringExtra(EXTRA_EMAIL);
-			mEmailView = (EditText) findViewById(R.id.email);
-			mEmailView.setText(mLogin);
+			mLoginView = (EditText) findViewById(R.id.email);
+			mLoginView.setText(mLogin);
 
 			mPasswordView = (EditText) findViewById(R.id.password);
 			mPasswordView
@@ -125,11 +125,11 @@ public class LoginActivity extends Activity {
 		}
 
 		// Reset errors.
-		mEmailView.setError(null);
+		mLoginView.setError(null);
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mLogin = mEmailView.getText().toString();
+		mLogin = mLoginView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -146,10 +146,10 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		// Check for a valid email address.
+		// Check for a valid login
 		if (TextUtils.isEmpty(mLogin)) {
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
+			mLoginView.setError(getString(R.string.error_field_required));
+			focusView = mLoginView;
 			cancel = true;
 		}
 
