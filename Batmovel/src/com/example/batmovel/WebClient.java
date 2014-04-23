@@ -85,7 +85,7 @@ public class WebClient {
 
 	}
 
-	public void postJson(String json) {
+	public boolean postJson(String json) {
 		HttpURLConnection con = null;
 		try {
 			con = (HttpURLConnection) (new URL(url)).openConnection();
@@ -116,6 +116,8 @@ public class WebClient {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 }

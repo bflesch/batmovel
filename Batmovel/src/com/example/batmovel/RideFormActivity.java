@@ -199,16 +199,18 @@ public class RideFormActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(String... json_is_in_zero) {
-    		//TODO funcionou ou não, jacaré ?
     			WebClient wc = new WebClient(URL_POST);
-    			wc.postJson(json_is_in_zero[0]);
-    			return true;
+    			boolean result = wc.postJson(json_is_in_zero[0]);
+    			return result;
         }
         @Override
         protected void onPostExecute(Boolean result) {
-        	if (result == true)
+        	if (result) {
+        		//TODO adicionar spinning para o usuario ficar mais feliz
         		toast (getString(R.string.ride_sent));
-        	if (result == false)
+        		finish();
+        	}
+        	else 
         		toast (getString(R.string.send_failed));
         		
         }

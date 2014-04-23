@@ -266,6 +266,7 @@ public class LoginActivity extends Activity {
 				}
 			}
 
+
 			//if (resultOK) {
 				saveCredentials(nusp,username);
 				changeToModeChooser();
