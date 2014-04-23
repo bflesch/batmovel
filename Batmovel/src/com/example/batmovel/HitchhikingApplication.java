@@ -37,5 +37,15 @@ public class HitchhikingApplication extends Application {
 		
 		editor.commit();
 	}
+	
+	public void saveRide(Ride ride){
+		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		
+		editor.putString(USP_NUMBER_KEY, user.uspNumber);
+		editor.putString(STOA_LOGIN_KEY, user.stoaLogin);
+		
+		editor.commit();
+	}
 
 }
