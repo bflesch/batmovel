@@ -116,12 +116,15 @@ public class RideFormActivity extends Activity {
 	}
 	
 	public void sendRide(View view){
+		
 		Ride ride = new Ride(true); //TODO remover booleano
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
 		ride.departuretime = build_datetime();
 
+		//HitchhikingApplication app = (HitchhikingApplication)getApplication(); 
+		//User user = app.getCurrentUser();
 		
 		if (ride.local_chegada.equals(""))
 			toast(getString(R.string.no_destination));

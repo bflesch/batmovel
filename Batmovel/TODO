@@ -1,0 +1,33 @@
+mendes fazendo: 
+salvar uma carona para usar os dados de novo, usar menu
+
+
+falta:
+exibir pessoas que manifestaram interesse em uma carona (foto, NUSP, nome)
+
+
+exibir dados de quem oferece a carona (foto, NUSP, nome)
+
+cores da USP (icone, action bar)
+
+localização atual via GPS, usar menu
+
+avaliar usuários (que te deram/pegaram carona)
+
+
+
+opcionais muito rasoáveis
+traduzir GPS para posicao
+broacast receiver para avisar ao outro usuário que a bateria está no fim
+testes automatizados (3 ?)
+menu: deslogar (e tirar menu da tela de login)
+exibir erro de carga na lista de caronas
+
+
+opcionais mais opcionais
+layout responsivo
+
+desencanar
+mostrar carona em mapa
+caching para envio posterior (comentar no relatório: é trivial dado que já salvamos um objeto, mas seria escroto e confuso para o usuário e não queremos fazer. Neiner neiner)
+
