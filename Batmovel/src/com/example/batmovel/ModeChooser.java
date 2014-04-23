@@ -3,7 +3,6 @@ package com.example.batmovel;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class ModeChooser extends Activity {
-
-	public static final String SHARED_PREFS_NAME = "KINNEGAD";
+	
+	private User currentUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +29,9 @@ public class ModeChooser extends Activity {
 	@Override
 	protected void onStart(){
 		super.onStart();
-		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
-		String username = settings.getString("username", "usuário");
+		currentUser = ((HitchhikingApplication)getApplication()).getCurrentUser();
 
-		((TextView) findViewById(R.id.greeting_area)).setText(username);
+		((TextView) findViewById(R.id.greeting_area)).setText("Olá, " + currentUser.stoaLogin + "!");
 	}
 
 	@Override

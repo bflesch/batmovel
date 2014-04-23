@@ -1,5 +1,6 @@
 package com.example.batmovel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.animation.Animator;
@@ -7,7 +8,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,67 +44,67 @@ public class LoginActivity extends Activity {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
-	private String username;
+	private User currentUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
-		username = settings.getString("username", null);
+		currentUser = ((HitchhikingApplication) getApplication()).getCurrentUser();
 
-		//if (username == null){
+		//if(currentUser.isEmpty()){
 
-			setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_login);
 
-			// Set up the login form.
-			mLogin = getIntent().getStringExtra(EXTRA_EMAIL);
-			mLoginView = (EditText) findViewById(R.id.email);
-			mLoginView.setText(mLogin);
+		// Set up the login form.
+		mLogin = getIntent().getStringExtra(EXTRA_EMAIL);
+		mLoginView = (EditText) findViewById(R.id.username);
+		mLoginView.setText(mLogin);
 
-			mPasswordView = (EditText) findViewById(R.id.password);
-			mPasswordView
-			.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView textView, int id,
-						KeyEvent keyEvent) {
-					if (id == R.id.login || id == EditorInfo.IME_NULL) {
-						attemptLogin();
-						return true;
-					}
-					return false;
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id,
+					KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
 				}
-			});
+				return false;
+			}
+		});
 
-			mLoginFormView = findViewById(R.id.login_form);
-			mLoginStatusView = findViewById(R.id.login_status);
-			mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-			findViewById(R.id.sign_in_button).setOnClickListener(
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							attemptLogin();
-						}
-					});
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptLogin();
+					}
+				});
 		//}
 		//else{
-			//setContentView(R.layout.activity_logout);
+		//setContentView(R.layout.activity_logout);
 		//}
 	}
 
 	@Override
 	protected void onStart(){
 		super.onStart();
-		//if (username != null) {
-		//	changeToModeChooser();
-		//}
+		if (!currentUser.isEmpty()) {
+			changeToModeChooser();
+		}
 	}
 //TODO last back is giving an error
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
-		mAuthTask.cancel(true);
+		if (mAuthTask != null)
+			mAuthTask.cancel(true);
 	}
 
 	@Override
@@ -213,50 +213,61 @@ public class LoginActivity extends Activity {
 		startActivity(intent);
 	}
 
-	private void saveCredentials(){
-		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("username", mLogin);
-
-		// Commit the edits!
-		editor.commit();
+	private void saveCredentials(String nusp, String username){
+		currentUser = new User();
+		currentUser.uspNumber = nusp; 
+		currentUser.stoaLogin = username;
+		HitchhikingApplication app = (HitchhikingApplication)getApplication(); 
+		app.setCurrentUser(currentUser);
+		app.saveCurrentUserIntoPreferences();
 	}
 
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
 		private static final String AUTHENTICATION_URL = "https://maxwell.stoa.usp.br/plugin/stoa/authenticate/";
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected JSONObject doInBackground(Void... params) {
 
 			try {
 				WebClient wc = new WebClient(AUTHENTICATION_URL);
 				String response = wc.postHttps(mLogin,mPassword);
 
 				JSONObject josie = new JSONObject(response);
-				Boolean wasOK = josie.getBoolean("ok");
-
-				if (wasOK) {
-					return true;
-				}
+				return josie;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			return false;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(final JSONObject result) {
+			boolean resultOK = false;
+			String nusp = null;
+			String username = null;
+
 			mAuthTask = null;
 			showProgress(false);
+			if (result != null){
+				try {
+					resultOK = result.getBoolean("ok");
+					nusp = result.getString("nusp");
+					username = result.getString("username");
+					System.err.println(result.toString()); //TODO remover
+				} catch (JSONException e) {
+					e.printStackTrace();
+					resultOK = false;
+				}
+			}
 
-			//if (success) {
-				saveCredentials();
+			//if (resultOK) {
+				saveCredentials(nusp,username);
 				changeToModeChooser();
 			//} else {
 			//	mPasswordView.setError(getString(R.string.error_incorrect_password));

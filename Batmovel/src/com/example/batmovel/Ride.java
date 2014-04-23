@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class Ride {
 
+	public String id; // identificador da carona no sistema
 	public String n_usp; /*no jason, driver*/
 	public String login; /*nome_de_usuario_no_stoa */
 	public String departuretime;
