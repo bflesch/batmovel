@@ -17,6 +17,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.os.Build;
 
 public class RideFormActivity extends Activity {
@@ -71,8 +73,11 @@ public class RideFormActivity extends Activity {
 		super.onStart();
 		
 		Calendar c = Calendar.getInstance(); 
+		c.setLenient(true);
+		c.add(Calendar.MINUTE, 10);
 		selected_hour = c.get(Calendar.HOUR_OF_DAY);
 		selected_minute = c.get(Calendar.MINUTE);
+	
 		setFormTime();
 
 		
@@ -99,13 +104,25 @@ public class RideFormActivity extends Activity {
 		return dateIso;
 	} 
 	
+	private void toast (String text){
+		
+		Context context = getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+	}
+	
 	public void sendRide(View view){
 		Ride ride = new Ride(true); //TODO remover booleano
-		//TODO departure time
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
 		ride.departuretime = build_datetime();
+		
+		toast (getString(R.string.sending_ride));
+		
 		uploadTask = new uploadJsonTask();
 		uploadTask.execute(ride.toJsonString());
 	}
@@ -187,11 +204,13 @@ public class RideFormActivity extends Activity {
     			wc.postJson(json_is_in_zero[0]);
     			return true;
         }
-        //TODO spinning for idleness
-        //TODO notificar sucesso
-        //TODO deixar os campos menos feios
         @Override
         protected void onPostExecute(Boolean result) {
+        	if (result == true)
+        		toast (getString(R.string.ride_sent));
+        	if (result == false)
+        		toast (getString(R.string.send_failed));
+        		
         }
     }
 

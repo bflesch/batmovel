@@ -100,7 +100,7 @@ public class LoginActivity extends Activity {
 		//	changeToModeChooser();
 		//}
 	}
-
+//TODO last back is giving an error
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -255,13 +255,13 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
-			if (success) {
+			//if (success) {
 				saveCredentials();
 				changeToModeChooser();
-			} else {
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
+			//} else {
+			//	mPasswordView.setError(getString(R.string.error_incorrect_password));
+			//	mPasswordView.requestFocus();
+			//}
 		}
 
 		@Override
