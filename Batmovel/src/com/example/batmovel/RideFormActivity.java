@@ -37,7 +37,7 @@ public class RideFormActivity extends Activity {
 	final static String URL_POST = "http://uspservices.deusanyjunior.dj/carona";
 	uploadJsonTask uploadTask = null;
 	
-	//TODO campos obrigatorios
+	//TODO e se o usuario cancelar o envio no meio ?
 
 	public int selected_hour;
 	public int selected_minute;
@@ -90,13 +90,14 @@ public class RideFormActivity extends Activity {
 	
 	private String build_datetime(){
 		Calendar rideCal = Calendar.getInstance();
-		rideCal.setLenient(true); //testar isso!
+		rideCal.setLenient(true);
 		rideCal.set(Calendar.HOUR_OF_DAY,selected_hour);
 		rideCal.set(Calendar.MINUTE,selected_minute);
 		Calendar rightNow = Calendar.getInstance();
 		
+		//Se horario indicado é antes do horario atual (hopefully)
 		if (rightNow.compareTo(rideCal) == 1) {
-			//Horario indicado é antes do horario atual (hopefully)
+			
 			rideCal.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
@@ -120,11 +121,17 @@ public class RideFormActivity extends Activity {
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
 		ride.departuretime = build_datetime();
+
 		
-		toast (getString(R.string.sending_ride));
-		
-		uploadTask = new uploadJsonTask();
-		uploadTask.execute(ride.toJsonString());
+		if (ride.local_chegada.equals(""))
+			toast(getString(R.string.no_destination));
+		else if (ride.local_partida.equals(""))
+			toast(getString(R.string.no_origin));
+		else {
+            toast (getString(R.string.sending_ride));
+			uploadTask = new uploadJsonTask();
+			uploadTask.execute(ride.toJsonString());
+		}
 	}
 
 	@Override

@@ -17,5 +17,7 @@
     <string name="sending_ride">enviando carona para o servidor</string>
     <string name="ride_sent">carona enviada!</string>
     <string name="send_failed">falha no envio</string>
-
+    <string name="no_origin">você não disse de onde vem!</string>
+    <string name="no_destination">você não disse para onde vai!</string>
+    
 </resources>
