@@ -14,15 +14,7 @@ public class Ride {
 	public String message;
 
 
-	public Ride(boolean isTest){
-		if (isTest){ //TODO des-hardecodear
-			this.n_usp = "5177188"; /*no jason, driver*/
-			this.login = "josinalvo"; /*nome_de_usuario_no_stoa */
-			this.departuretime = "2014-04-19T23:55:00Z";
-			this.local_partida = ""; /*no json, actuallocalization*/
-			this.local_chegada = ""; /*no json, targetlocalization*/
-			this.message= "";
-		}
+	public Ride(){
 	}
 
 	public Ride(String jsonString) {
