@@ -25,21 +25,17 @@ public class Ride {
 		try {
 			JSONObject object = new JSONObject(jsonString);
 			object = object.getJSONObject("riderecord");
-			this.n_usp = object.getString("driver");
-			this.login = object.getString("login");
 			this.local_partida = object.getString("actuallocalization");
 			this.local_chegada = object.getString("targetlocalization");
 			this.departuretime = object.getString("departuretime");
-			this.message = object.getString("message");
+			this.n_usp = object.optString("driver");
+			this.login = object.optString("login"); //TODO decidir isso. Do server sempre tem. 
+			                                        //No disco, nem sempre
+			this.message = object.optString("message");
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public boolean isPublishable(){
-		//TODO exigir campos exigidos
-		return true;
 	}
 
 	public JSONObject toJSONObject() {

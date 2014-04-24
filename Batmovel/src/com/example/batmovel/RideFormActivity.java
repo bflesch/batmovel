@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -41,6 +43,8 @@ public class RideFormActivity extends Activity {
 
 	public int selected_hour;
 	public int selected_minute;
+	
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +87,57 @@ public class RideFormActivity extends Activity {
 		
 	}
 
+	/* Carrega a ride salva anteriormente no disco. Seta o formulário e as variaveis internas*/
+	public void loadRide(View view){
+		
+		Ride ride;
+		HitchhikingApplication app = (HitchhikingApplication) getApplication();
+		ride = app.loadRide();
+		
+		if (ride==null) {
+			toast("você nunca salvou uma ride!");
+		    //TODO mandar para strings
+			//TODO testar
+			return;
+		}
+		
+		putStringInTextViewId(R.id.destino,ride.local_chegada);
+		putStringInTextViewId(R.id.mensagem,ride.message);
+		putStringInTextViewId(R.id.origem,ride.local_partida);
+		
+		
+		/*try {
+			Date d = (Date) dateFormatter.parse(ride.departuretime);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			
+			selected_hour = c.get(Calendar.HOUR_OF_DAY);
+			selected_minute = c.get(Calendar.MINUTE);
+			
+			setFormTime();
+		} catch (ParseException e) {
+			// isso não deve acontecer de jeito nenhum ... Só se houver uma string 
+			// cagada SALVA LOCALMENTE ...
+			e.printStackTrace();
+		}*/
+	}
+	
+	public void saveRide(View view){
+		Ride ride = buildRideFromForm();
+		HitchhikingApplication app = (HitchhikingApplication) getApplication();
+		app.saveRide(ride);
+		
+	}
+	
+	private void putStringInTextViewId(int id,String text){
+		EditText editText = (EditText) findViewById(id);
+		editText.setText(text);
+		
+	}
+	
 	private String textViewIdToString(int id){
 		  EditText editText = (EditText) findViewById(id);
-          return editText.getText().toString();
+		  return editText.getText().toString();
 	}
 	
 	private String build_datetime(){
@@ -95,13 +147,13 @@ public class RideFormActivity extends Activity {
 		rideCal.set(Calendar.MINUTE,selected_minute);
 		Calendar rightNow = Calendar.getInstance();
 		
-		//Se horario indicado é antes do horario atual (hopefully)
+		//Se horario indicado é antes do horario atual,
+		// então o usuário quer dar carona no dia seguinte
 		if (rightNow.compareTo(rideCal) == 1) {
 			
 			rideCal.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-		String dateIso = df.format(rideCal.getTime());
+		String dateIso = dateFormatter.format(rideCal.getTime());
 		return dateIso;
 	} 
 	
@@ -115,13 +167,18 @@ public class RideFormActivity extends Activity {
 		
 	}
 	
-	public void sendRide(View view){
-		
+	private Ride buildRideFromForm(){
 		Ride ride = new Ride();
 		ride.local_chegada = textViewIdToString(R.id.destino); 
 		ride.local_partida = textViewIdToString(R.id.origem);
 		ride.message = textViewIdToString(R.id.mensagem);
 		ride.departuretime = build_datetime();
+		return ride;
+	}
+	
+	public void sendRide(View view){
+		
+        Ride ride = buildRideFromForm();
 
 		HitchhikingApplication app = (HitchhikingApplication)getApplication(); 
 		User user = app.getCurrentUser();
