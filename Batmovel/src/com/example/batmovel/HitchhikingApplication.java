@@ -44,10 +44,7 @@ public class HitchhikingApplication extends Application {
 		SharedPreferences.Editor editor = settings.edit();
 		
 		editor.putString(RIDE_KEY, ride.toJsonString());
-		//TODO deletar isso
-		System.err.println("----saved----\n");
-		System.err.println(ride.toJsonString());
-		System.err.println("----saved----\n");
+
 		
 		editor.commit();
 	}
@@ -56,10 +53,6 @@ public class HitchhikingApplication extends Application {
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
 		
 		String rideS = preferences.getString(RIDE_KEY, null);
-		System.err.println("----loaded----\n");
-		System.err.println(rideS);
-		System.err.println("----loaded----\n");
-		//TODO deletar isso
 		
 		if (rideS == null)
 			return null;

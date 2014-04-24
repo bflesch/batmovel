@@ -98,6 +98,7 @@ public class RideFormActivity extends Activity {
 			toast("você nunca salvou uma ride!");
 		    //TODO mandar para strings
 			//TODO testar
+			//TODO desaparecer com o botao
 			return;
 		}
 		
@@ -105,21 +106,22 @@ public class RideFormActivity extends Activity {
 		putStringInTextViewId(R.id.mensagem,ride.message);
 		putStringInTextViewId(R.id.origem,ride.local_partida);
 		
+		System.err.println(ride.departuretime);
 		
-		/*try {
-			Date d = (Date) dateFormatter.parse(ride.departuretime);
+		try {
+			java.util.Date d = dateFormatter.parse(ride.departuretime);
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
-			
 			selected_hour = c.get(Calendar.HOUR_OF_DAY);
 			selected_minute = c.get(Calendar.MINUTE);
 			
 			setFormTime();
 		} catch (ParseException e) {
-			// isso não deve acontecer de jeito nenhum ... Só se houver uma string 
-			// cagada SALVA LOCALMENTE ...
+			System.err.println("isso não deve acontecer de jeito nenhum ... Só se houver uma string cagada SALVA LOCALMENTE ...");
 			e.printStackTrace();
-		}*/
+		}
+		
+
 	}
 	
 	public void saveRide(View view){
