@@ -1,20 +1,10 @@
 package com.example.batmovel;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -32,14 +22,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.os.Build;
 
 public class RideFormActivity extends Activity {
 	
 	final static String URL_POST = "http://uspservices.deusanyjunior.dj/carona";
 	uploadJsonTask uploadTask = null;
-	
-	//TODO e se o usuario cancelar o envio no meio ?
 
 	public int selected_hour;
 	public int selected_minute;
@@ -97,7 +84,7 @@ public class RideFormActivity extends Activity {
 		ride = app.loadRide();
 		
 		if (ride==null) {
-			toast("você nunca salvou uma carona!");
+			toast(getString(R.string.no_ride_yet));
 		    //TODO mandar para strings
 			return;
 		}
@@ -127,7 +114,7 @@ public class RideFormActivity extends Activity {
 		Ride ride = buildRideFromForm();
 		HitchhikingApplication app = (HitchhikingApplication) getApplication();
 		app.saveRide(ride);	
-		toast("carona salva!");
+		toast(getString(R.string.save_ok));
 	}
 
 	
@@ -194,6 +181,8 @@ public class RideFormActivity extends Activity {
 			toast(getString(R.string.no_origin));
 		else {
             toast (getString(R.string.sending_ride));
+    		if (uploadTask != null)
+    		    uploadTask.cancel(true);
 			uploadTask = new uploadJsonTask();
 			uploadTask.execute(ride.toJsonString());
 		}
@@ -228,7 +217,7 @@ public class RideFormActivity extends Activity {
 		super.onDestroy();
 		if (uploadTask != null) {
 		    uploadTask.cancel(true);
-		    toast("envio cancelado");
+		    toast(getString(R.string.ride_sending_cancelled));
 		}
 	}
 	

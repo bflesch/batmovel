@@ -19,5 +19,12 @@
     <string name="send_failed">falha no envio</string>
     <string name="no_origin">você não disse de onde vem!</string>
     <string name="no_destination">você não disse para onde vai!</string>
+    <string name="no_ride_yet">você nunca salvou uma carona!</string>
+    <string name="save_ok">carona salva</string>
+    <string name="ride_sending_cancelled">envio cancelado</string>
+    <string name="load_ride_button">carregar carona salva</string>
+    <string name="save_ride_button">salvar carona para depois</string>
+    
+    
     
 </resources>

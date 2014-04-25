@@ -6,12 +6,12 @@
         android:id="@+id/load_ride_menu_item"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="carregar carona salva"/>
+        android:title="@string/load_ride_button"/>
 
     <item
         android:id="@+id/save_ride_menu_item"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="salvar carona para depois"/>
+        android:title="@string/save_ride_button"/>
     
 </menu>
