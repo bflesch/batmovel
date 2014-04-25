@@ -1,6 +1,6 @@
 feito:
 dummy user
-salvar uma carona para usar os dados de novo, usar menu (ja salva, só falta o menu)
+salvar uma carona para usar os dados de novo, usar menu
 
 mendes fazendo: 
 localização atual via GPS, usar menu
@@ -8,10 +8,6 @@ localização atual via GPS, usar menu
 
 breno fazendo:
 DJ!!! 
-
-breno futuro:
-menu: deslogar (e tirar menu da tela de login)
-
 
 falta:
 exibir pessoas que manifestaram interesse em uma carona (foto, NUSP, nome)
@@ -29,9 +25,11 @@ avaliar usuários (que te deram/pegaram carona)
 opcionais muito razoáveis
 traduzir GPS para posicao
 broacast receiver para (avisar ao outro usuário que a bateria está no fim ?) 
-                       (reduzir a frequencia do pooling ?)
+                       (reduzir a frequencia do pooling de novas rides?)
+                       (desativar o GPS ?)
 testes automatizados (3 ?)
 exibir erro de carga na lista de caronas
+menu: deslogar (e tirar menu da tela de login)
 
 
 
