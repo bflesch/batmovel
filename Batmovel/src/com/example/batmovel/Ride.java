@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class Ride {
 
-	public String id; // identificador da carona no sistema
+	public int id; // identificador da carona no sistema
 	public String n_usp; /*no jason, driver*/
 	public String login; /*nome_de_usuario_no_stoa */
 	public String departuretime;
@@ -33,6 +33,7 @@ public class Ride {
 		try {
 			JSONObject object = new JSONObject(jsonString);
 			object = object.getJSONObject("riderecord");
+			this.id = object.getInt("id");
 			this.n_usp = object.getString("driver");
 			this.login = object.getString("login");
 			this.local_partida = object.getString("actuallocalization");

@@ -41,6 +41,8 @@ public class RideListActivity extends ListActivity {
 
 	protected String JSONdata;
 	protected JsonDownloader downloader;
+	
+	final static String URL_POST = "http://uspservices.deusanyjunior.dj/interesseemcarona";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,6 @@ public class RideListActivity extends ListActivity {
 			conn.setDoInput(true);
 			conn.connect();
 			InputStream stream = conn.getInputStream();
-			//TODO maybe think in terms of streams ?
 			String response = convertStreamToString(stream);
 			stream.close();
 			return response;
@@ -307,6 +308,12 @@ public class RideListActivity extends ListActivity {
 
 	public static class ConfirmHitchhikeDialogFragment extends DialogFragment {
 		private CharSequence message;
+		private RideListActivity parentRideList;
+		private Ride boundRide;
+		
+		public ConfirmHitchhikeDialogFragment(){
+
+		}
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -314,24 +321,53 @@ public class RideListActivity extends ListActivity {
 			builder.setMessage(this.message)
 			.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					parentRideList.sendInterestForRide(boundRide);
 				}
 			})
 			.setNegativeButton("Não", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					//nao fazer nada, queremos so cancelar o dialogo
 				}
 			});
 			return builder.create();
 		}
 
-		public void setPayload(Ride r) {
+		public void setPayload(Ride r, RideListActivity rla) {
 			this.message = "Você aceita a carona para " + r.local_chegada + " oferecida por " + r.n_usp + "?";
+			this.boundRide = r;
+			this.parentRideList = rla;
 		}
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id){
+		Ride r = (Ride) l.getItemAtPosition(position);
 		ConfirmHitchhikeDialogFragment f = new ConfirmHitchhikeDialogFragment();
-		f.setPayload((Ride) l.getItemAtPosition(position));
+		f.setPayload(r,this);
 		(f).show(getFragmentManager(), "Brocolis");
 	}
+
+	protected void sendInterestForRide(Ride boundRide) {
+		RideInterest rideInterest = new RideInterest(boundRide);
+		rideInterest.hitchhiker = ((HitchhikingApplication)getApplication()).getCurrentUser().uspNumber;
+		rideInterest.message = "quero ir com você!";
+		UploadJsonTask uploader = new UploadJsonTask();
+		uploader.execute(rideInterest.toJsonString());
+        //TODO spinning for idleness
+	}
+	
+    private class UploadJsonTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... json_is_in_zero) {
+    		//TODO funcionou?
+    			WebClient wc = new WebClient(URL_POST);
+    			wc.postJson(json_is_in_zero[0]);
+    			return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+        	//TODO wait for acceptance or maybe go to chat
+        }
+    }
 }
