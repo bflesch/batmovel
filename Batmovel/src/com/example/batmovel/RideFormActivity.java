@@ -87,18 +87,18 @@ public class RideFormActivity extends Activity {
 		
 	}
 
+	
+	
 	/* Carrega a ride salva anteriormente no disco. Seta o formulário e as variaveis internas*/
-	public void loadRide(View view){
+	public void loadRide(){
 		
 		Ride ride;
 		HitchhikingApplication app = (HitchhikingApplication) getApplication();
 		ride = app.loadRide();
 		
 		if (ride==null) {
-			toast("você nunca salvou uma ride!");
+			toast("você nunca salvou uma carona!");
 		    //TODO mandar para strings
-			//TODO testar
-			//TODO desaparecer com o botao
 			return;
 		}
 		
@@ -120,16 +120,16 @@ public class RideFormActivity extends Activity {
 			System.err.println("isso não deve acontecer de jeito nenhum ... Só se houver uma string cagada SALVA LOCALMENTE ...");
 			e.printStackTrace();
 		}
-		
 
 	}
 	
-	public void saveRide(View view){
+	public void saveRide(){
 		Ride ride = buildRideFromForm();
 		HitchhikingApplication app = (HitchhikingApplication) getApplication();
-		app.saveRide(ride);
-		
+		app.saveRide(ride);	
+		toast("carona salva!");
 	}
+
 	
 	private void putStringInTextViewId(int id,String text){
 		EditText editText = (EditText) findViewById(id);
@@ -204,31 +204,37 @@ public class RideFormActivity extends Activity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.ride_form, menu);
+		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.load_ride_menu_item:
+	            loadRide();
+	            System.err.println("carregar!");
+	            return true;
+	        case R.id.save_ride_menu_item:
+	            saveRide(); System.err.println("salvar!");
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		if (uploadTask != null)
+		if (uploadTask != null) {
 		    uploadTask.cancel(true);
+		    toast("envio cancelado");
+		}
 	}
 	
 	public void showTimePickerDialog(View v) {
 	    DialogFragment newFragment = new TimePickerFragment();
 	    newFragment.show(getFragmentManager(), "timePicker");
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public static class PlaceholderFragment extends Fragment {
@@ -284,6 +290,7 @@ public class RideFormActivity extends Activity {
         	}
         	else 
         		toast (getString(R.string.send_failed));
+        	uploadTask = null;
         		
         }
     }

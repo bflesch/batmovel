@@ -66,20 +66,6 @@
             android:text="@string/button_send"
             android:textSize="10pt" />
     
-       <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="saveRide"
-            android:text="gravar para depois"
-            android:textSize="10pt" />
-       
-          <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="loadRide"
-            android:text="usar carona anteriormente salva"
-            android:textSize="10pt" />
-    
     </LinearLayout>
 
 </ScrollView>
