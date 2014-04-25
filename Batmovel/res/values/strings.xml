@@ -11,6 +11,20 @@
     <string name="title_activity_ride_form">RideFormActivity</string>
     <string name="local_da_partida">local da partida</string>
     <string name="local_de_chegada">local de chegada</string>
-    <string name="observacoes_para_o_caronista">observacoes diversas para o caronista (opcional)</string>
-
+    <string name="observacoes_para_o_caronista">observacoes para o caronista (opcional)</string>
+    <string name="horario_de_partida">horario de partida:</string>
+    
+    <string name="sending_ride">enviando carona para o servidor</string>
+    <string name="ride_sent">carona enviada!</string>
+    <string name="send_failed">falha no envio</string>
+    <string name="no_origin">você não disse de onde vem!</string>
+    <string name="no_destination">você não disse para onde vai!</string>
+    <string name="no_ride_yet">você nunca salvou uma carona!</string>
+    <string name="save_ok">carona salva</string>
+    <string name="ride_sending_cancelled">envio cancelado</string>
+    <string name="load_ride_button">carregar carona salva</string>
+    <string name="save_ride_button">salvar carona para depois</string>
+    
+    
+    
 </resources>

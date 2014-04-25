@@ -14,15 +14,7 @@ public class Ride {
 	public String message;
 
 
-	public Ride(boolean isTest){
-		if (isTest){ //TODO des-hardecodear
-			this.n_usp = "5177188"; /*no jason, driver*/
-			this.login = "josinalvo"; /*nome_de_usuario_no_stoa */
-			this.departuretime = "2014-04-19T23:55:00Z";
-			this.local_partida = ""; /*no json, actuallocalization*/
-			this.local_chegada = ""; /*no json, targetlocalization*/
-			this.message= "";
-		}
+	public Ride(){
 	}
 
 	public Ride(String jsonString) {
@@ -34,21 +26,17 @@ public class Ride {
 			JSONObject object = new JSONObject(jsonString);
 			object = object.getJSONObject("riderecord");
 			this.id = object.getInt("id");
-			this.n_usp = object.getString("driver");
-			this.login = object.getString("login");
 			this.local_partida = object.getString("actuallocalization");
 			this.local_chegada = object.getString("targetlocalization");
 			this.departuretime = object.getString("departuretime");
-			this.message = object.getString("message");
+			this.n_usp = object.optString("driver");
+			this.login = object.optString("login"); //TODO decidir isso. Do server sempre tem. 
+			                                        //No disco, nem sempre
+			this.message = object.optString("message");
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public boolean isPublishable(){
-		//TODO exigir campos exigidos
-		return true;
 	}
 
 	public JSONObject toJSONObject() {
