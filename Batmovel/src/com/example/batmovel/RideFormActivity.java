@@ -63,6 +63,9 @@ public class RideFormActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		
+		HitchhikingApplication app = (HitchhikingApplication) getApplication();
+		app.startGPS();
+		
 		Calendar c = Calendar.getInstance(); 
 		c.setLenient(true);
 		c.add(Calendar.MINUTE, 10);
@@ -71,6 +74,13 @@ public class RideFormActivity extends Activity {
 	
 		setFormTime();
 
+		
+	}
+	
+	protected void onPause(){
+		super.onPause();
+		HitchhikingApplication app = (HitchhikingApplication) getApplication();
+		app.stopGPS();
 		
 	}
 
@@ -85,7 +95,6 @@ public class RideFormActivity extends Activity {
 		
 		if (ride==null) {
 			toast(getString(R.string.no_ride_yet));
-		    //TODO mandar para strings
 			return;
 		}
 		
@@ -197,6 +206,15 @@ public class RideFormActivity extends Activity {
 		return true;
 	}
 	
+	private void getGPS(){
+		HitchhikingApplication app = (HitchhikingApplication) getApplication();
+		String coords = app.getCoords();
+		if (coords == null)
+			toast("não foi possivel pegar a posição.\n O GPS está ligado ?");
+		else 
+		    putStringInTextViewId(R.id.origem,app.getCoords());
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -207,6 +225,9 @@ public class RideFormActivity extends Activity {
 	        case R.id.save_ride_menu_item:
 	            saveRide(); System.err.println("salvar!");
 	            return true;
+	        case R.id.get_GPS_location:
+	        	getGPS();
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
