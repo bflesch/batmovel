@@ -22,6 +22,11 @@
         android:paddingLeft="@dimen/page_margin"
         android:paddingRight="@dimen/page_margin"
         android:scrollbarStyle="outsideOverlay"
-        android:choiceMode="multipleChoice" />
+        android:choiceMode="singleChoice" />
+
+    <TextView android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_data_received" />
 
 </LinearLayout>

@@ -24,6 +24,7 @@
     <string name="ride_sending_cancelled">envio cancelado</string>
     <string name="load_ride_button">carregar carona salva</string>
     <string name="save_ride_button">salvar carona para depois</string>
+    <string name="no_data_received">Sem dados recebidos</string>
     
     
     

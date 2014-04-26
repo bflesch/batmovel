@@ -39,27 +39,35 @@ import android.widget.TextView;
 
 public class RideListActivity extends ListActivity {
 
-	protected String JSONdata;
 	protected JsonDownloader downloader;
-	
+
 	final static String URL_POST = "http://uspservices.deusanyjunior.dj/interesseemcarona";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ride_list);
-
-		if (savedInstanceState == null) {
-			RideRecordListAdapter adapter = new RideRecordListAdapter();
-			setListAdapter(adapter);
-			downloader = new JsonDownloader(adapter);
+		RideRecordListAdapter adapter = new RideRecordListAdapter();
+		setListAdapter(adapter);
+		downloader = new JsonDownloader(adapter);
+		if(savedInstanceState != null){
+			downloader.onRestoreInstanceState(savedInstanceState);
 		}
+		downloader.start();
 	}
 
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
-		downloader.onDestroy();
+		if (downloader != null)
+			downloader.onDestroy();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		if(downloader != null)
+			downloader.onSaveInstanceState(outState);
+		super.onSaveInstanceState(outState); //ALWAYS I WANNA BE WITH SUPERCLASS / AND LIVE IN HARMONY HARMONY
 	}
 
 	@Override
@@ -81,22 +89,14 @@ public class RideListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void notifyUpdate(String str){
-		this.JSONdata = str;
-	}
-	
-	public void confirmHitchhike(Ride r){
-		RideInterest interest = new RideInterest(r);
-		interest.hitchhiker = getCurrentUser().uspNumber;
-	}
-
 	private User getCurrentUser() {
 		return ((HitchhikingApplication) getApplication()).getCurrentUser();
 	}
-	
+
 	public class JsonDownloader {
 		private static final String URL =
 				"http://uspservices.deusanyjunior.dj/carona/3.json";
+		public final static long NANOSECONDS_IN_A_SECOND = 1000*1000*1000;
 
 		// Whether there is an internet connection.
 		private boolean connected = false;
@@ -107,15 +107,33 @@ public class RideListActivity extends ListActivity {
 		// time of last update
 		private long lastUpdate = 0;
 
-		private static final int staleLimit = 60;
+		private long staleTime = 0;
+
+		//número de segundos até os dados perderem a validade
+		private static final int STALE_LIMIT = 15;
+		private static final String LAST_UPDATE_KEY = "last_update_at";
+		private static final String SOME_INFO_KEY = "info_received";
 
 		private RideRecordListAdapter adapter;
 		private Timer timer;
 
 		public JsonDownloader(RideRecordListAdapter adapter) {
 			this.adapter = adapter;
-			timer = new Timer();
-			timer.scheduleAtFixedRate(new UpdateTask(), 0, 1000*10 /*miliseconds*/);
+			this.timer = new Timer();
+		}
+
+		public void start(){
+			timer.scheduleAtFixedRate(new UpdateTask(), 0, 10*1000 /*miliseconds*/);
+		}
+
+		public void onRestoreInstanceState(Bundle state) {
+			lastUpdate = state.getLong(LAST_UPDATE_KEY, 0);
+			someInfo = state.getBoolean(SOME_INFO_KEY,false);
+		}
+
+		public void onSaveInstanceState(Bundle outState) {
+			outState.putLong(LAST_UPDATE_KEY, lastUpdate);
+			outState.putBoolean(SOME_INFO_KEY, someInfo);
 		}
 
 		public void onDestroy() {
@@ -123,24 +141,16 @@ public class RideListActivity extends ListActivity {
 				timer.cancel();
 		}
 
-		private String convertStreamToString(InputStream is) {
+		private String convertStreamToString(InputStream is) throws IOException {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			StringBuilder sb = new StringBuilder();
 
 			String line = null;
-			try {
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
 			}
+			is.close();
+
 			return sb.toString();
 		}
 
@@ -164,64 +174,78 @@ public class RideListActivity extends ListActivity {
 			connected = (activeInfo != null && activeInfo.isConnected()); 
 		}
 
-		private void showError() {
-			adapter.notifyError(R.string.connection_error); 
+		protected void showStale() {
+			setError("Dados não atualizados há " + staleTime + " segundos");
 		}
 
-		private void noStale() {
-			adapter.clearError();
+		protected void checkStale() {
+			long currTime = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
+			staleTime = (currTime - lastUpdate);
+			if (staleTime > STALE_LIMIT)
+				showStale();
 		}
 
-		private void showStale(int staleTime) {
-			//TODO quantos segundos sao stale ?
-			adapter.notifyError("Dados não atualizados desde:" + staleTime);
-			adapter.notifyDataSetChanged();
+		private void setError(String message){
+			System.err.println("entered seterrr with: " + message);
+			TextView errorView = (TextView) findViewById(R.id.error);
+			errorView.setText(message);
 		}
 
 		private class DownloadJsonTask extends AsyncTask<String, Void, String> {
+
+			String error = null;
 
 			@Override 
 			protected String doInBackground(String... urls) {
 				try {
 					return downloadUrl(urls[0]);
 				} catch (IOException e) {
-					//TODO O que acontece se a conexão der pau no meio ?
-					adapter.notifyError(R.string.connection_error);
-					adapter.setData("");
-					adapter.notifyDataSetChanged();
+					this.error = getResources().getString(R.string.connection_error);
 				}
 				return "";
 			}
 
 			@Override
 			protected void onPostExecute(String result) {
-				adapter.setData(result);
-				adapter.notifyDataSetChanged();
+				if (error == null){ //tudo ocorreu bem
+					someInfo = true;
+					lastUpdate = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
+					setError("Tudo OK");
+					adapter.setData(result);
+					adapter.notifyDataSetChanged();
+				}
+				else if (someInfo){ //erro, mas já temos dados. Avisar que estão vencidos
+					long currTime = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
+					staleTime = currTime - lastUpdate;
+					if ( staleTime > STALE_LIMIT)
+						showStale();
+				}
+				else { //erro, não temos dados. Mostrar que não temos dados
+					TextView emptyView = (TextView) findViewById(android.R.id.empty);
+					setError("Sem dados");
+					emptyView.setText(error);
+					adapter.setData(result);
+					adapter.notifyDataSetChanged();
+				}
 			}
 		}
 
-		//TODO parar quando a task nao estiver visivel
 		class UpdateTask extends TimerTask {
-
-			final static long NANOSECONDS_IN_A_SECOND = 1000*1000*1000;
-
 			public void run() {
-
 				updateConnectedFlag();
-
 				if (connected) {
-					someInfo = true;
-					noStale();
-					lastUpdate = (long) (System.nanoTime()/(NANOSECONDS_IN_A_SECOND));
 					new DownloadJsonTask().execute(URL);
-				}   else {
-					if (someInfo) {
-						long currTime = (long) (System.nanoTime()/(NANOSECONDS_IN_A_SECOND));
-						if (currTime - lastUpdate > staleLimit)
-							showStale((int) (currTime - lastUpdate));
-					}
-					else {
-						showError();
+				}
+				else {
+					long currTime = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
+					staleTime = (currTime - lastUpdate);
+					if (someInfo){
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								checkStale();
+							}
+						});
 					}
 				}
 			}
@@ -235,8 +259,7 @@ public class RideListActivity extends ListActivity {
 		boolean hasError = false;
 		String errorMessage = "";
 
-
-		public void setData(String json_string){
+		public boolean setData(String json_string){
 			try {
 				JSONObject object = new JSONObject(json_string);
 				this.jsonData = object.getJSONArray("riderecordlist");
@@ -244,9 +267,11 @@ public class RideListActivity extends ListActivity {
 				for(int i=0; i<jsonData.length(); i++){
 					data.add(new Ride(jsonData.getJSONObject(i).toString()));
 				}
+				return true;
 			}
 			catch (JSONException e){
 				e.printStackTrace();
+				return false;
 			}
 		}
 
@@ -273,12 +298,12 @@ public class RideListActivity extends ListActivity {
 
 			Ride ride = data.get(position);
 			String driverName;
-			
+
 			if ((ride.login != null) && (!ride.login.isEmpty()))
 				driverName = ride.login;
 			else
 				driverName = ride.n_usp;
-			
+
 			((TextView) convertView.findViewById(R.id.destination))
 			.setText(ride.local_chegada);
 
@@ -290,30 +315,12 @@ public class RideListActivity extends ListActivity {
 
 			return convertView;
 		}
-
-		public void notifyError(String errorMessage) {
-			this.hasError = true;
-			this.errorMessage = errorMessage;	
-		}
-
-		public void clearError() {
-			this.errorMessage = "";
-		}
-
-		public void notifyError(int errorStringNumber) {
-			notifyError(getResources().getString(errorStringNumber));
-		}
-
 	}
 
 	public static class ConfirmHitchhikeDialogFragment extends DialogFragment {
 		private CharSequence message;
 		private RideListActivity parentRideList;
 		private Ride boundRide;
-		
-		public ConfirmHitchhikeDialogFragment(){
-
-		}
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -353,21 +360,21 @@ public class RideListActivity extends ListActivity {
 		rideInterest.message = "quero ir com você!";
 		UploadJsonTask uploader = new UploadJsonTask();
 		uploader.execute(rideInterest.toJsonString());
-        //TODO spinning for idleness
+		//TODO spinning for idleness
 	}
-	
-    private class UploadJsonTask extends AsyncTask<String, Void, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(String... json_is_in_zero) {
-    		//TODO funcionou?
-    			WebClient wc = new WebClient(URL_POST);
-    			wc.postJson(json_is_in_zero[0]);
-    			return true;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-        	//TODO wait for acceptance or maybe go to chat
-        }
-    }
+	private class UploadJsonTask extends AsyncTask<String, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(String... json_is_in_zero) {
+			//TODO funcionou?
+			WebClient wc = new WebClient(URL_POST);
+			wc.postJson(json_is_in_zero[0]);
+			return true;
+		}
+		@Override
+		protected void onPostExecute(Boolean result) {
+			//TODO wait for acceptance or maybe go to chat
+		}
+	}
 }
