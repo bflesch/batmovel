@@ -2,37 +2,34 @@ feito:
 dummy user
 salvar uma carona para usar os dados de novo, usar menu
 localização atual via GPS, usar menu
+exibir erro de carga na lista de caronas
 
 mendes fazendo: 
 
 breno fazendo:
-DJ!!! 
+menu: deslogar (e tirar menu da tela de login)
 
 falta:
 exibir pessoas que manifestaram interesse em uma carona (foto, NUSP, nome)
-
 
 exibir dados de quem oferece a carona (foto, NUSP, nome)
 
 cores da USP (icone, action bar)
 
-
 avaliar usuários (que te deram/pegaram carona)
 
 
 
-opcionais muito razoáveis
+opcionais muito razoáveis:
 traduzir GPS para posicao
 broacast receiver para (avisar ao outro usuário que a bateria está no fim ?) 
                        (reduzir a frequencia do pooling de novas rides?)
                        (desativar o GPS ?)
 testes automatizados (3 ?)
-exibir erro de carga na lista de caronas
-menu: deslogar (e tirar menu da tela de login)
 
 
 
-opcionais mais opcionais
+opcionais mais opcionais:
 layout responsivo
 fazer o celular do mendes funcionar
 fazer os formularios ficarem parecidos
@@ -41,4 +38,4 @@ deixar o formulário de envio de carona mais bonito
 desencanar
 mostrar carona em mapa
 caching para envio posterior (comentar no relatório: é trivial dado que já salvamos um objeto, mas seria escroto e confuso para o usuário e não queremos fazer. Neiner neiner)
-
+DJ!!! 
