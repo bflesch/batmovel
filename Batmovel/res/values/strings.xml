@@ -7,7 +7,7 @@
     <string name="title_activity_mode_chooser">ModeChooser</string>
     <string name="hitch_ride">Pegar Carona</string>
     <string name="give_ride">Dar Carona</string>
-    <string name="connection_error">Erro na conexao</string>
+    <string name="connection_error">Erro na conexão</string>
     <string name="title_activity_ride_form">RideFormActivity</string>
     <string name="local_da_partida">local da partida</string>
     <string name="local_de_chegada">local de chegada</string>
@@ -25,6 +25,7 @@
     <string name="load_ride_button">carregar carona salva</string>
     <string name="save_ride_button">salvar carona para depois</string>
     <string name="no_data_received">Sem dados recebidos</string>
+    <string name="action_logout">Efetuar logout</string>
     
     
     
