@@ -10,6 +10,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -178,8 +179,7 @@ public class RideFormActivity extends Activity {
 		
         Ride ride = buildRideFromForm();
 
-		HitchhikingApplication app = (HitchhikingApplication)getApplication(); 
-		User user = app.getCurrentUser();
+		User user = User.getCurrentUser(getApplicationContext());
 		
 		ride.n_usp = user.uspNumber;
 		ride.login = user.stoaLogin;
@@ -227,6 +227,12 @@ public class RideFormActivity extends Activity {
 	            return true;
 	        case R.id.get_GPS_location:
 	        	getGPS();
+	        	return true;
+	        case R.id.action_logout:
+				User.logout(getApplicationContext());
+				Intent intent = new Intent(this, LoginActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);

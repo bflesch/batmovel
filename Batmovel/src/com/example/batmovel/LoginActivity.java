@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		currentUser = ((HitchhikingApplication) getApplication()).getCurrentUser();
+		currentUser = User.getCurrentUser(getApplicationContext());
 
 		if(currentUser == null || currentUser.isEmpty()){
 			setupLogin();
@@ -143,10 +143,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void attemptLogout(){
-		//TODO implementar
-		HitchhikingApplication app = ((HitchhikingApplication)getApplication());
-		app.setCurrentUser(null);
-		app.saveCurrentUserIntoPreferences();
+		User.logout(getApplicationContext());
 		setupLogin();
 	}
 
@@ -253,9 +250,7 @@ public class LoginActivity extends Activity {
 		currentUser = new User();
 		currentUser.uspNumber = nusp; 
 		currentUser.stoaLogin = username;
-		HitchhikingApplication app = (HitchhikingApplication)getApplication(); 
-		app.setCurrentUser(currentUser);
-		app.saveCurrentUserIntoPreferences();
+		User.login(getApplicationContext(), currentUser);
 	}
 
 	/**

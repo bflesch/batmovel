@@ -29,7 +29,7 @@ public class ModeChooser extends Activity {
 	@Override
 	protected void onStart(){
 		super.onStart();
-		currentUser = ((HitchhikingApplication)getApplication()).getCurrentUser();
+		currentUser = User.getCurrentUser(getApplicationContext());
 
 		((TextView) findViewById(R.id.greeting_area)).setText("Olá, " + currentUser.stoaLogin + "!");
 	}
@@ -48,6 +48,7 @@ public class ModeChooser extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_logout) {
+			User.logout(getApplicationContext());
 			Intent intent = new Intent(this, LoginActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

@@ -22,6 +22,7 @@ import android.app.ListActivity;
 //import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -83,14 +84,14 @@ public class RideListActivity extends ListActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_logout) {
+			User.logout(getApplicationContext());
+			Intent intent = new Intent(this, LoginActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private User getCurrentUser() {
-		return ((HitchhikingApplication) getApplication()).getCurrentUser();
 	}
 
 	public class JsonDownloader {
@@ -356,7 +357,7 @@ public class RideListActivity extends ListActivity {
 
 	protected void sendInterestForRide(Ride boundRide) {
 		RideInterest rideInterest = new RideInterest(boundRide);
-		rideInterest.hitchhiker = ((HitchhikingApplication)getApplication()).getCurrentUser().uspNumber;
+		rideInterest.hitchhiker = User.getCurrentUser(getApplicationContext()).uspNumber;
 		rideInterest.message = "quero ir com você!";
 		UploadJsonTask uploader = new UploadJsonTask();
 		uploader.execute(rideInterest.toJsonString());
