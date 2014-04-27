@@ -142,7 +142,7 @@ public class RideListActivity extends ListActivity {
 		}
 
 		protected void showStale() {
-			setError("Dados não atualizados há " + staleTime + " segundos");
+			setError("Faz " + staleTime + " segundos que não consigo atualizar as caronas");
 		}
 
 		protected void checkStale() {
@@ -177,7 +177,7 @@ public class RideListActivity extends ListActivity {
 					TextView emptyView = (TextView) findViewById(android.R.id.empty);
 					someInfo = true;
 					lastUpdate = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
-					setError("Tudo OK");
+					setError("Caronas estão atualizadas");
 					emptyView.setText("Não há caronas disponíveis");
 					adapter.setData(result);
 					adapter.notifyDataSetChanged();
