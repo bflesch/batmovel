@@ -9,6 +9,6 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#0000CC</item>
+        <item name="android:background">@drawable/cores_usp</item>
     </style>
 </resources>
