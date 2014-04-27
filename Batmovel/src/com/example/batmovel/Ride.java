@@ -1,7 +1,15 @@
 package com.example.batmovel;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.text.method.DateTimeKeyListener;
 
 public class Ride {
 
@@ -13,6 +21,7 @@ public class Ride {
 	public String local_chegada; /*no json, targetlocalization*/
 	public String message;
 
+	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
 
 	public Ride(){
 	}
@@ -58,5 +67,26 @@ public class Ride {
 
 	public String toJsonString(){
 		return this.toJSONObject().toString();
+	}
+
+	public boolean isGone() {
+		Calendar now = Calendar.getInstance();
+		Date departure;
+		Calendar then = Calendar.getInstance();
+
+		try {
+			departure = dateFormatter.parse(departuretime);
+			then.setTime(departure);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return true;
+		}
+		try { 
+			boolean gone = now.after(then);
+			return gone;
+		} catch (IllegalArgumentException e){
+			e.printStackTrace();
+			return true;
+		}
 	}
 }

@@ -153,7 +153,6 @@ public class RideListActivity extends ListActivity {
 		}
 
 		private void setError(String message){
-			System.err.println("entered seterrr with: " + message);
 			TextView errorView = (TextView) findViewById(R.id.error);
 			errorView.setText(message);
 		}
@@ -175,9 +174,11 @@ public class RideListActivity extends ListActivity {
 			@Override
 			protected void onPostExecute(JSONObject result) {
 				if (error == null){ //tudo ocorreu bem
+					TextView emptyView = (TextView) findViewById(android.R.id.empty);
 					someInfo = true;
 					lastUpdate = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
 					setError("Tudo OK");
+					emptyView.setText("Não há caronas disponíveis");
 					adapter.setData(result);
 					adapter.notifyDataSetChanged();
 				}
@@ -232,7 +233,9 @@ public class RideListActivity extends ListActivity {
 				this.data = new ArrayList<Ride>();
 				for(int i=0; i<jsonData.length(); i++){
 					Ride ride = new Ride(jsonData.getJSONObject(i).toString());
-					data.add(ride);
+					if (!ride.isGone()){
+						data.add(ride);
+					}
 				}
 				return true;
 			}
