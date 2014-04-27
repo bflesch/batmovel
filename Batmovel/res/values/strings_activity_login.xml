@@ -7,6 +7,7 @@
     <string name="prompt_password">Senha</string>
     <string name="action_sign_in_register"><b>Login</b></string>
     <string name="action_sign_in_short">Login</string>
+    <string name="action_sign_out"><b>Logout</b></string>
     <string name="action_forgot_password">Esqueci minha senha</string>
     <string name="login_progress_signing_in">Efetuando login&#8230;</string>
     <string name="error_invalid_email">Email inválido</string>

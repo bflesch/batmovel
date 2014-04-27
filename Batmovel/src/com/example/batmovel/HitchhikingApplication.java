@@ -52,8 +52,13 @@ public class HitchhikingApplication extends Application {
 		SharedPreferences settings = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		
-		editor.putString(USP_NUMBER_KEY, user.uspNumber);
-		editor.putString(STOA_LOGIN_KEY, user.stoaLogin);
+		if (user != null){
+			editor.putString(USP_NUMBER_KEY, user.uspNumber);
+			editor.putString(STOA_LOGIN_KEY, user.stoaLogin);
+		} else {
+			editor.remove(USP_NUMBER_KEY);
+			editor.remove(STOA_LOGIN_KEY);
+		}
 		
 		editor.commit();
 	}

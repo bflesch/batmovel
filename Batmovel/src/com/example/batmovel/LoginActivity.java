@@ -52,8 +52,29 @@ public class LoginActivity extends Activity {
 
 		currentUser = ((HitchhikingApplication) getApplication()).getCurrentUser();
 
-		//if(currentUser.isEmpty()){
+		if(currentUser == null || currentUser.isEmpty()){
+			setupLogin();
+		} else{
+			setupLogout();
+		}
+	}
+	
+	
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if(currentUser == null || currentUser.isEmpty()){
+			setupLogin();
+		} else{
+			setupLogout();
+		}
+		
+	}
 
+
+
+	protected void setupLogin(){
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
@@ -86,20 +107,27 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
-		//}
-		//else{
-		//setContentView(R.layout.activity_logout);
-		//}
+	}
+	
+	protected void setupLogout(){
+		setContentView(R.layout.activity_logout);
+		findViewById(R.id.sign_out_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptLogout();
+					}
+				});
 	}
 
 	@Override
 	protected void onStart(){
 		super.onStart();
-		if (!currentUser.isEmpty()) {
-			changeToModeChooser();
-		}
+//		if (!currentUser.isEmpty()) {
+//			changeToModeChooser();
+//		}
 	}
-	
+
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -112,6 +140,14 @@ public class LoginActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
+	}
+
+	public void attemptLogout(){
+		//TODO implementar
+		HitchhikingApplication app = ((HitchhikingApplication)getApplication());
+		app.setCurrentUser(null);
+		app.saveCurrentUserIntoPreferences();
+		setupLogin();
 	}
 
 	/**
@@ -265,7 +301,7 @@ public class LoginActivity extends Activity {
 					resultOK = false;
 				}
 			}
-			
+
 			if (mLogin.equals("1111")){
 				resultOK = true;
 				nusp = "1111";
@@ -279,7 +315,7 @@ public class LoginActivity extends Activity {
 			} else {
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
-		    }
+			}
 		}
 
 		@Override
