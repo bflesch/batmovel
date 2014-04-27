@@ -142,7 +142,7 @@ public class RideListActivity extends ListActivity {
 		}
 
 		protected void showStale() {
-			setError("Dados não atualizados há " + staleTime + " segundos");
+			setError("Faz " + staleTime + " segundos que não consigo atualizar as caronas");
 		}
 
 		protected void checkStale() {
@@ -177,7 +177,7 @@ public class RideListActivity extends ListActivity {
 				if (error == null){ //tudo ocorreu bem
 					someInfo = true;
 					lastUpdate = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
-					setError("Tudo OK");
+					setError("as caronas estão atualizadas");
 					adapter.setData(result);
 					adapter.notifyDataSetChanged();
 				}
