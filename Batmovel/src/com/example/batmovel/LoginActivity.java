@@ -7,7 +7,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,21 +18,23 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * 
+ * Classe gerada através do wizard do Eclipse para LoginActivity,
+ * conectada com o WebClient
+ *
+ */
+
 public class LoginActivity extends Activity {
 
 	public static final String SHARED_PREFS_NAME = "KINNEGAD";
 
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_LOGIN = "br.usp.ime.LOGIN";
+	public static final String EXTRA_LOGIN = "br.usp.ime.extra.LOGIN";
 
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
+	
+	//Keep track of the login task to ensure we can cancel it if requested.
 	private UserLoginTask mAuthTask = null;
 
-	// Values for email and password at the time of the login attempt.
 	private String mLogin;
 	private String mPassword;
 
@@ -51,22 +52,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		currentUser = User.getCurrentUser(getApplicationContext());
-
-		if(currentUser == null || currentUser.isEmpty()){
-			setupLogin();
-		} else {
-			setupLogout();
-		}
-	}
-	
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		if(currentUser == null || currentUser.isEmpty()){
-			setupLogin();
-		} else{
-			setupLogout();
-		}
+		setupLogin();
 	}
 
 	protected void setupLogin(){
@@ -104,17 +90,6 @@ public class LoginActivity extends Activity {
 				});
 	}
 	
-	protected void setupLogout(){
-		setContentView(R.layout.activity_logout);
-		findViewById(R.id.sign_out_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogout();
-					}
-				});
-	}
-
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -127,11 +102,6 @@ public class LoginActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
-	}
-
-	public void attemptLogout(){
-		User.logout(getApplicationContext());
-		setupLogin();
 	}
 
 	/**
@@ -187,9 +157,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Shows the progress UI and hides the login form.
-	 */
+	//Shows the progress UI and hides the login form.
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow

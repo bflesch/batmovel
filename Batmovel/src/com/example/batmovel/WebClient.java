@@ -7,9 +7,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -119,5 +122,45 @@ public class WebClient {
 			return false;
 		}
 		return true;
+	}
+	
+	private String convertStreamToString(InputStream is) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+		is.close();
+
+		return sb.toString();
+	}
+	
+	public JSONObject getJson(){
+		
+		try {
+			URL url = new URL(this.url);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(10000 /* milliseconds */);
+			conn.setConnectTimeout(15000 /* milliseconds */);
+			conn.setRequestMethod("GET");
+			conn.setDoInput(true);
+			conn.connect();
+			InputStream stream = conn.getInputStream();
+			String response = convertStreamToString(stream);
+			stream.close();
+			JSONObject jsonResponse = new JSONObject(response);
+			return jsonResponse;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}catch (IOException e){
+			e.printStackTrace();
+			return null;
+		} catch (JSONException e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

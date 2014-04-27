@@ -1,11 +1,5 @@
 package com.example.batmovel;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,8 +12,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ListActivity;
-//import android.app.ActionBar;
-//import android.app.Fragment;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,7 +21,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-//import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +29,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-//import android.os.Build;
+
 
 public class RideListActivity extends ListActivity {
 
@@ -142,33 +135,6 @@ public class RideListActivity extends ListActivity {
 				timer.cancel();
 		}
 
-		private String convertStreamToString(InputStream is) throws IOException {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			StringBuilder sb = new StringBuilder();
-
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-
-			return sb.toString();
-		}
-
-		private String downloadUrl(String urlString) throws IOException {
-			URL url = new URL(urlString);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(10000 /* milliseconds */);
-			conn.setConnectTimeout(15000 /* milliseconds */);
-			conn.setRequestMethod("GET");
-			conn.setDoInput(true);
-			conn.connect();
-			InputStream stream = conn.getInputStream();
-			String response = convertStreamToString(stream);
-			stream.close();
-			return response;
-		}
-
 		private void updateConnectedFlag() {
 			ConnectivityManager connMgr = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
@@ -192,22 +158,22 @@ public class RideListActivity extends ListActivity {
 			errorView.setText(message);
 		}
 
-		private class DownloadJsonTask extends AsyncTask<String, Void, String> {
+		private class DownloadJsonTask extends AsyncTask<String, Void, JSONObject> {
 
 			String error = null;
 
 			@Override 
-			protected String doInBackground(String... urls) {
-				try {
-					return downloadUrl(urls[0]);
-				} catch (IOException e) {
+			protected JSONObject doInBackground(String... urls) {
+				WebClient wc = new WebClient(urls[0]);
+				JSONObject jsonResponse = wc.getJson();
+				if(jsonResponse == null) { 
 					this.error = getResources().getString(R.string.connection_error);
 				}
-				return "";
+				return jsonResponse;
 			}
 
 			@Override
-			protected void onPostExecute(String result) {
+			protected void onPostExecute(JSONObject result) {
 				if (error == null){ //tudo ocorreu bem
 					someInfo = true;
 					lastUpdate = System.nanoTime()/(NANOSECONDS_IN_A_SECOND);
@@ -260,13 +226,13 @@ public class RideListActivity extends ListActivity {
 		boolean hasError = false;
 		String errorMessage = "";
 
-		public boolean setData(String json_string){
+		public boolean setData(JSONObject object){
 			try {
-				JSONObject object = new JSONObject(json_string);
 				this.jsonData = object.getJSONArray("riderecordlist");
 				this.data = new ArrayList<Ride>();
 				for(int i=0; i<jsonData.length(); i++){
-					data.add(new Ride(jsonData.getJSONObject(i).toString()));
+					Ride ride = new Ride(jsonData.getJSONObject(i).toString());
+					data.add(ride);
 				}
 				return true;
 			}
