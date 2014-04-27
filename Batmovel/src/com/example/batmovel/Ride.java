@@ -1,6 +1,6 @@
 package com.example.batmovel;
 
-import java.text.DateFormat;
+import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,19 +9,18 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.method.DateTimeKeyListener;
-
 public class Ride {
 
 	public int id; // identificador da carona no sistema
-	public String n_usp; /*no jason, driver*/
+	public String n_usp; /*no json, driver*/
 	public String login; /*nome_de_usuario_no_stoa */
 	public String departuretime;
 	public String local_partida; /*no json, actuallocalization*/
 	public String local_chegada; /*no json, targetlocalization*/
 	public String message;
 
-	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+	@SuppressLint("SimpleDateFormat")
+	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public Ride(){
 	}
