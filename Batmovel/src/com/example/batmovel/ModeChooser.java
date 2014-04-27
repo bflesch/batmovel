@@ -24,16 +24,20 @@ public class ModeChooser extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		currentUser = User.getCurrentUser(getApplicationContext());
+		if (currentUser == null || (currentUser.isEmpty())){
+			Intent intent = new Intent(this, LoginActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override
 	protected void onStart(){
 		super.onStart();
-		currentUser = User.getCurrentUser(getApplicationContext());
-
-		((TextView) findViewById(R.id.greeting_area)).setText("Olá, " + currentUser.stoaLogin + "!");
+		setupGreeting();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -55,6 +59,11 @@ public class ModeChooser extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void setupGreeting(){
+		currentUser = User.getCurrentUser(getApplicationContext());
+		((TextView) findViewById(R.id.greeting_area)).setText("Olá, " + currentUser.stoaLogin + "!");
 	}
 	
 	//TODO mudar o nome do metodo

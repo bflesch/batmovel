@@ -230,7 +230,7 @@ public class RideFormActivity extends Activity {
 	        	return true;
 	        case R.id.action_logout:
 				User.logout(getApplicationContext());
-				Intent intent = new Intent(this, LoginActivity.class);
+				Intent intent = new Intent(this, ModeChooser.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 	        	return true;

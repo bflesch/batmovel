@@ -26,7 +26,7 @@ public class LoginActivity extends Activity {
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_LOGIN = "br.usp.ime.LOGIN";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -54,12 +54,10 @@ public class LoginActivity extends Activity {
 
 		if(currentUser == null || currentUser.isEmpty()){
 			setupLogin();
-		} else{
+		} else {
 			setupLogout();
 		}
 	}
-	
-	
 	
 	@Override
 	protected void onRestart() {
@@ -69,16 +67,13 @@ public class LoginActivity extends Activity {
 		} else{
 			setupLogout();
 		}
-		
 	}
-
-
 
 	protected void setupLogin(){
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mLogin = getIntent().getStringExtra(EXTRA_EMAIL);
+		mLogin = getIntent().getStringExtra(EXTRA_LOGIN);
 		mLoginView = (EditText) findViewById(R.id.username);
 		mLoginView.setText(mLogin);
 
@@ -121,14 +116,6 @@ public class LoginActivity extends Activity {
 	}
 
 	@Override
-	protected void onStart(){
-		super.onStart();
-//		if (!currentUser.isEmpty()) {
-//			changeToModeChooser();
-//		}
-	}
-
-	@Override
 	protected void onDestroy(){
 		super.onDestroy();
 		if (mAuthTask != null)
@@ -149,7 +136,7 @@ public class LoginActivity extends Activity {
 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * If there are form errors (invalid login, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
@@ -241,11 +228,6 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	private void changeToModeChooser(){
-		Intent intent = new Intent(this, ModeChooser.class);
-		startActivity(intent);
-	}
-
 	private void saveCredentials(String nusp, String username){
 		currentUser = new User();
 		currentUser.uspNumber = nusp; 
@@ -267,14 +249,12 @@ public class LoginActivity extends Activity {
 				WebClient wc = new WebClient(AUTHENTICATION_URL);
 				String response = wc.postHttps(mLogin,mPassword);
 
-				JSONObject josie = new JSONObject(response);
-				return josie;
+				JSONObject jsonResponse = new JSONObject(response);
+				return jsonResponse;
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return null;
 			}
-
-			return null;
 		}
 
 		@Override
@@ -297,6 +277,7 @@ public class LoginActivity extends Activity {
 				}
 			}
 
+			//TODO workaround
 			if (mLogin.equals("1111")){
 				resultOK = true;
 				nusp = "1111";
@@ -306,7 +287,7 @@ public class LoginActivity extends Activity {
 
 			if (resultOK) {
 				saveCredentials(nusp,username);
-				changeToModeChooser();
+				finish();
 			} else {
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
