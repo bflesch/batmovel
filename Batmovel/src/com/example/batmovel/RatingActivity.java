@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,9 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class RatingActivity extends ListActivity {
+
+	public static final String URL_POST_RATING = "http://uspservices.deusanyjunior.dj/avaliacaodousuario";
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +55,34 @@ public class RatingActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		User u = (User) l.getItemAtPosition(position);
-//		((TextView) findViewById(R.id.stars)).setText(u.stoaLogin);
+		RatingManager.prepareToRate(u);
+		((TextView) findViewById(R.id.rated_user)).setText("Avaliando " + u.stoaLogin);
 	}
 
 
+	public void attemptRating(View v){
+		AttemptRatingTask attempter = new AttemptRatingTask();
+		RatingBar rb = (RatingBar) findViewById(R.id.rating_bar);
+		float rating = rb.getRating();
+		User currentUser = User.getCurrentUser(getApplicationContext());
+		String jsonRating = RatingManager.getRatingJson(rating,currentUser);
+		//attempter.execute(jsonRating);
+		System.err.println(jsonRating); //TODO
+	}
+	
+	private class AttemptRatingTask extends AsyncTask<String, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(String... json_is_in_zero) {
+			WebClient wc = new WebClient(URL_POST_RATING);
+			return wc.postJson(json_is_in_zero[0]);
+		}
+		@Override
+		protected void onPostExecute(Boolean result) {
+			//TODO wait for acceptance or maybe go to chat
+		}
+	}
+	
 
 	public class RatingListAdapter extends BaseAdapter {
 
