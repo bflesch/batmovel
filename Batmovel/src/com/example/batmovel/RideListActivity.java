@@ -12,7 +12,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ListActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -222,29 +220,28 @@ public class RideListActivity extends ListActivity {
 
 	public class RideRecordListAdapter extends BaseAdapter {
 
-		JSONArray jsonData = new JSONArray();
 		ArrayList<Ride> data = new ArrayList<Ride>();
 		boolean hasError = false;
 		String errorMessage = "";
 
-		public boolean setData(JSONObject object){
-			try {
-				this.jsonData = object.getJSONArray("riderecordlist");
-				this.data = new ArrayList<Ride>();
-				for(int i=0; i<jsonData.length(); i++){
-					Ride ride = new Ride(jsonData.getJSONObject(i).toString());
-					if (!ride.isGone()){
-						data.add(ride);
-					}
-				}
-				return true;
-			}
-			catch (JSONException e){
-				e.printStackTrace();
+		public boolean setData (JSONObject object){
+			data = Ride.listFromJsonList(object);
+			
+			if (data == null)
 				return false;
+			
+			for(int i=(data.size()-1); i>=0; i--){
+				System.err.println("ride ...");
+				Ride ride = data.get(i);
+				if (ride.isGone()){
+					System.err.println("is gone =(\n");
+					data.remove(i);
+				}
 			}
+			
+			return true;
 		}
-
+		
 		@Override
 		public int getCount() {
 			return data.size();
