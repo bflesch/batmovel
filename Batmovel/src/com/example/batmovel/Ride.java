@@ -3,9 +3,11 @@ package com.example.batmovel;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +23,7 @@ public class Ride {
 	public String local_chegada; /*no json, targetlocalization*/
 	public String message;
 
-	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public Ride(){
 	}
@@ -30,6 +32,23 @@ public class Ride {
 		fromJsonString(jsonString);
 	}
 
+	static public ArrayList<Ride> listFromJsonList(JSONObject jlist){
+		try {
+			JSONArray jsonData = new JSONArray();
+			ArrayList<Ride> data = new ArrayList<Ride>();
+			jsonData = jlist.getJSONArray("riderecordlist");
+			for(int i=0; i<jsonData.length(); i++){
+				Ride ride = new Ride(jsonData.getJSONObject(i).toString());
+				data.add(ride);
+			}
+			return data;
+		}
+		catch (JSONException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public void fromJsonString(String jsonString) {
 		try {
 			JSONObject object = new JSONObject(jsonString);
