@@ -29,7 +29,8 @@
         android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name="com.example.batmovel.RideListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.batmovel.ModeChooser" >
         </activity>
         <activity
             android:name="com.example.batmovel.ModeChooser"
@@ -47,7 +48,8 @@
         </activity>
         <activity
             android:name="com.example.batmovel.RideFormActivity"
-            android:label="@string/title_activity_ride_form" >
+            android:label="@string/title_activity_ride_form"
+            android:parentActivityName="com.example.batmovel.ModeChooser" >
         </activity>
         <activity
             android:name="com.example.batmovel.RatingActivity"
