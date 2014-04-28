@@ -13,7 +13,6 @@
     <string name="local_de_chegada">local de chegada</string>
     <string name="observacoes_para_o_caronista">observacoes para o caronista (opcional)</string>
     <string name="horario_de_partida">horario de partida:</string>
-    
     <string name="sending_ride">Enviando carona para o servidor</string>
     <string name="ride_sent">Carona enviada!</string>
     <string name="send_failed">Falha no envio</string>
@@ -26,7 +25,8 @@
     <string name="save_ride_button">Salvar carona atual</string>
     <string name="no_data_received">Ainda não foram baixadas as caronas</string>
     <string name="action_logout">Efetuar logout</string>
-    
-    
-    
+    <string name="title_activity_rating">Avaliar usuários</string>
+    <string name="rate_users">Avaliar Usuários</string>
+    <string name="no_ratings_available">Não há usuários a avaliar</string>
+
 </resources>

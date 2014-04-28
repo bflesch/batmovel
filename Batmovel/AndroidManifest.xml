@@ -49,6 +49,14 @@
             android:name="com.example.batmovel.RideFormActivity"
             android:label="@string/title_activity_ride_form" >
         </activity>
+        <activity
+            android:name="com.example.batmovel.RatingActivity"
+            android:label="@string/title_activity_rating"
+            android:parentActivityName="com.example.batmovel.ModeChooser" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.batmovel.ModeChooser" />
+        </activity>
     </application>
 
 </manifest>

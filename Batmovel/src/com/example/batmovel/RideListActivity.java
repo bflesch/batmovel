@@ -61,7 +61,7 @@ public class RideListActivity extends ListActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		if(downloader != null)
 			downloader.onSaveInstanceState(outState);
-		super.onSaveInstanceState(outState); //ALWAYS I WANNA BE WITH SUPERCLASS / AND LIVE IN HARMONY HARMONY
+		super.onSaveInstanceState(outState); //TODO ALWAYS I WANNA BE WITH SUPERCLASS / AND LIVE IN HARMONY HARMONY
 	}
 
 	@Override

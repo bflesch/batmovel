@@ -77,6 +77,11 @@ public class ModeChooser extends Activity {
 		startActivity(intent);		
 	}
 	
+	public void changeToRatingActivity(View view) {
+		Intent intent = new Intent(this, RatingActivity.class);
+		startActivity(intent);		
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
