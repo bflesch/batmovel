@@ -161,6 +161,14 @@ public class RideListActivity extends ListActivity {
 
 			@Override 
 			protected JSONObject doInBackground(String... urls) {
+				
+	        	RatingManager ratings = new RatingManager();
+	        	System.err.println("----------");
+	        	int numbar = ratings.canReview("5177188", "7261561");
+	        	System.err.println(numbar);
+	        	System.err.println("----------");
+
+				
 				WebClient wc = new WebClient(urls[0]);
 				JSONObject jsonResponse = wc.getJson();
 				if(jsonResponse == null) { 
@@ -231,10 +239,8 @@ public class RideListActivity extends ListActivity {
 				return false;
 			
 			for(int i=(data.size()-1); i>=0; i--){
-				System.err.println("ride ...");
 				Ride ride = data.get(i);
 				if (ride.isGone()){
-					System.err.println("is gone =(\n");
 					data.remove(i);
 				}
 			}
@@ -334,6 +340,7 @@ public class RideListActivity extends ListActivity {
 
 		@Override
 		protected Boolean doInBackground(String... json_is_in_zero) {
+			
 			//TODO funcionou?
 			WebClient wc = new WebClient(URL_POST);
 			wc.postJson(json_is_in_zero[0]);
