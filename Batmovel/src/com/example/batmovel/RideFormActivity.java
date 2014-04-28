@@ -293,9 +293,12 @@ public class RideFormActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(String... json_is_in_zero) {
-    			WebClient wc = new WebClient(URL_POST);
-    			boolean result = wc.postJson(json_is_in_zero[0]);
-    			return result;
+        	    
+
+        	
+        	WebClient wc = new WebClient(URL_POST);
+    		boolean result = wc.postJson(json_is_in_zero[0]);
+    		return result;
         }
         @Override
         protected void onPostExecute(Boolean result) {
