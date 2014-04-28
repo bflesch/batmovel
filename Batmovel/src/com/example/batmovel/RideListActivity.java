@@ -313,7 +313,7 @@ public class RideListActivity extends ListActivity {
 		}
 
 		public void setPayload(Ride r, RideListActivity rla) {
-			this.message = "Você aceita a carona para " + r.local_chegada + " oferecida por " + r.n_usp + "?";
+			this.message = "Você aceita a carona para " + r.local_chegada + " oferecida por " + r.login + "?";
 			this.boundRide = r;
 			this.parentRideList = rla;
 		}
