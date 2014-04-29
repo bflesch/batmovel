@@ -6,18 +6,17 @@ import org.json.JSONObject;
 
 public class RatingManager {
 	    
-	    JSONObject interestsJ;
-	    JSONObject offersJ;
 	    ArrayList<Ride> offers;
 	    ArrayList<Interest> interests;
 
 		public void downloadJsons (){
 			WebClient interestsW = new WebClient("http://uspservices.deusanyjunior.dj/interesseemcarona/1.json");
 			WebClient offersW = new WebClient("http://uspservices.deusanyjunior.dj/carona/1.json");
-			interestsJ = interestsW.getJson();
-			offersJ = offersW.getJson();
+			JSONObject interestsJ = interestsW.getJson();
+			JSONObject offersJ = offersW.getJson();
 			if (interestsJ == null || offersJ == null) {
-				return;
+				offers = null;
+				interests = null;
 			}
 			offers = Ride.listFromJsonList(offersJ);
 			interests = Interest.listFromJsonList(interestsJ);
@@ -26,7 +25,7 @@ public class RatingManager {
 		/* can A review B ? How many times ?*/
 		//TODO com a ajuda do servidor, fazer com que os usuários possam dar reviews específicas para cada ride
 		//TODO com a ajuda do servidor, verificar se a ride realmente foi dada (em que sentido ?)
-		public int canReview (String nuspA, String nuspB){
+		public int numberInteractions (String nuspA, String nuspB){
 			downloadJsons();
 			int num_reviews = 0;
 			for(int i=0; i<interests.size(); i++){
@@ -47,5 +46,70 @@ public class RatingManager {
                    }
 			}
 			return num_reviews;
+		}
+		
+		//TODO retornar Users
+		public ArrayList<User> whoToTry (String nuspA){
+			downloadJsons();
+			ArrayList<String> guys = new ArrayList<String> (); //preciso disso para a unicidade de NUSP
+			ArrayList<User> users = new ArrayList<User> ();
+			for(int i=0; i<interests.size(); i++){
+                   Interest interest = interests.get(i);
+                   int ride_num = interest.ride_id;
+                   Ride ride = offers.get(ride_num-1);
+                   String nusp1 = interest.nusp_rider; String login1 = interest.user_rider;
+                   String nusp2 = ride.n_usp; String login2 = ride.login;
+                   if (nusp1.equals(nuspA) ) {
+                	  if (!guys.contains(nusp2)) {
+                		  guys.add(nusp2);
+                		  users.add(new User(nusp2,login2));
+                	  }
+                   }
+                   if (nusp2.equals(nuspA)){
+                	   if (!guys.contains(nusp1)) {
+                          guys.add(nusp1);
+                          users.add(new User(nusp1,login1));
+                	   }
+                   }
+			}
+			return users;
+		}
+		
+		public ArrayList<User> pendingReviews (User userA){
+			ArrayList<User> candidates = whoToTry(userA.uspNumber);
+			ArrayList<User> toReview = new ArrayList<User>();
+			for (int i=0; i<candidates.size();i++) {
+				String nuspB = candidates.get(i).uspNumber;
+				String nuspA = userA.uspNumber;
+				Integer reviews = numberOfReviews(nuspA,nuspB);
+				Integer interactions = numberInteractions(nuspA,nuspB);
+				if (reviews == null || interactions == null)
+					return null;
+				if (interactions > reviews) {
+					toReview.add(candidates.get(i));
+				}
+			}
+			return toReview;
+		}
+		
+		/*how many times has A reviewed B ?*/
+		public Integer numberOfReviews(String nuspA, String nuspB) {
+			String url = "http://uspservices.deusanyjunior.dj/avaliacaodousuario/"+nuspB+".json";
+			//for (x in evaluations)
+			//    if (a = x.judge && b = x.judged)
+			//        cont++
+			WebClient reviewsOfB_W = new WebClient(url);
+			JSONObject reviewsOfB_J = reviewsOfB_W.getJson();
+			Integer cont = 0;
+			if (reviewsOfB_J == null)
+				return null;
+			ArrayList<Review> review_list = Review.listFromJsonList(reviewsOfB_J);
+			for(int i=0; i<review_list.size(); i++) {
+				Review review = review_list.get(i);
+				if (nuspA.equals(review.judge_nusp) && nuspB.equals(review.other_nusp)){
+					cont++;
+				}
+			}
+			return cont;
 		}
 }

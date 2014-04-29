@@ -162,12 +162,27 @@ public class RideListActivity extends ListActivity {
 			@Override 
 			protected JSONObject doInBackground(String... urls) {
 				
+				
+				//TODO remover
 	        	RatingManager ratings = new RatingManager();
 	        	System.err.println("----------");
-	        	int numbar = ratings.canReview("5177188", "7261561");
-	        	System.err.println(numbar);
+	        	ArrayList<User> pending = ratings.pendingReviews(new User("1111","marcos"));
+	        	System.err.println("the pending reviews for 1111:");
+	        	for (int i = 0;i<pending.size();i++) {
+	        		User user = pending.get(i);
+	        		System.err.println(user.uspNumber+" is pending");
+	        	}
 	        	System.err.println("----------");
-
+	        	
+	        	System.err.println("5177188 avaliou 1111");
+	        	System.err.println(ratings.numberOfReviews("5177188", "1111"));
+	        	System.err.println("72... avaliou 1111");
+	        	System.err.println(ratings.numberOfReviews("7261561", "1111"));
+	        	System.err.println("111 avaliou 1111");
+	        	System.err.println(ratings.numberOfReviews("111", "1111"));
+	        	
+	        	System.err.println("----------");
+	        	//TODO remover outros println
 				
 				WebClient wc = new WebClient(urls[0]);
 				JSONObject jsonResponse = wc.getJson();

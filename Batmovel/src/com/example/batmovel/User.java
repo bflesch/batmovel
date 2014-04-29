@@ -18,6 +18,16 @@ public class User {
 		return (uspNumber == null || stoaLogin == null);
 	}
 
+	public User(){
+		super();
+	}
+	
+	public User(String nusp, String login) {
+		super();
+		uspNumber = nusp;
+		stoaLogin = login;
+	}
+	
 	public static User getCurrentUser(Context context){
 		setApplicationContext(context);
 		if (currentUser == null)
