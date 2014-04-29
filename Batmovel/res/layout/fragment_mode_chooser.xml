@@ -10,11 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.batmovel.ModeChooser$PlaceholderFragment" >
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
     <TextView
         android:id="@+id/greeting_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/give_ride_button"
@@ -22,17 +32,37 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_give_ride"
         android:onClick="changeToRideForm"
-        android:text="@string/give_ride"/>
+        android:text="@string/give_ride" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/hitch_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_action_hitchhike"
-        android:text="@string/hitch_ride"
-        android:onClick="changeToRideList" />
+        android:onClick="changeToRideList"
+        android:text="@string/hitch_ride" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/rating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_action_rate"
+        android:onClick="changeToRatingActivity"
+        android:text="@string/rate_users" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
 </LinearLayout>
