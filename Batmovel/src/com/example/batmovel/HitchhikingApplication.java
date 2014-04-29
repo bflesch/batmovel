@@ -71,19 +71,7 @@ public class HitchhikingApplication extends Application {
 			currLocation = null;
 			return null;
 		}
-	/*	Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
-		try {
-			List<Address> addresses = geo.getFromLocation(currLocation.getLatitude(), //
-					                                      currLocation.getLongitude(), 1);
-			if (addresses.isEmpty())
-				return null;
-			
-			return addresses.get(0).getFeatureName();
-			
-			
-		} catch (IOException e) {
-			return null;
-		}*/
+
 		//TODO on the other side, make it better
 		return ""+currLocation.getLatitude()+","+currLocation.getLongitude();
 	}
