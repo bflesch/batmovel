@@ -21,15 +21,19 @@ public class RatingManager {
 			offers = null;
 			interests = null;
 		}
-		offers = Ride.listFromJsonList(offersJ);
-		interests = Interest.listFromJsonList(interestsJ);
+		else {
+			offers = Ride.listFromJsonList(offersJ);
+			interests = Interest.listFromJsonList(interestsJ);
+		}
 	}
 
 	/* can A review B ? How many times ?*/
 	//TODO com a ajuda do servidor, fazer com que os usuários possam dar reviews específicas para cada ride
 	//TODO com a ajuda do servidor, verificar se a ride realmente foi dada (em que sentido ?)
-	public int numberInteractions (String nuspA, String nuspB){
+	public Integer numberInteractions (String nuspA, String nuspB){
 		downloadJsons();
+		if (interests == null || offers == null)
+			return null;
 		int num_reviews = 0;
 		for(int i=0; i<interests.size(); i++){
 			Interest interest = interests.get(i);
@@ -79,6 +83,8 @@ public class RatingManager {
 	//TODO retornar Users
 	public ArrayList<User> whoToTry (String nuspA){
 		downloadJsons();
+		if (interests == null || offers == null)
+			return null;
 		ArrayList<String> guys = new ArrayList<String> (); //preciso disso para a unicidade de NUSP
 		ArrayList<User> users = new ArrayList<User> ();
 		for(int i=0; i<interests.size(); i++){
@@ -105,6 +111,8 @@ public class RatingManager {
 
 	public ArrayList<User> pendingReviews (User userA){
 		ArrayList<User> candidates = whoToTry(userA.uspNumber);
+		if (candidates == null)
+			return null;
 		ArrayList<User> toReview = new ArrayList<User>();
 		for (int i=0; i<candidates.size();i++) {
 			String nuspB = candidates.get(i).uspNumber;

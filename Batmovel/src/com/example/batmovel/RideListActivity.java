@@ -47,12 +47,18 @@ public class RideListActivity extends ListActivity {
 		}
 		downloader.start();
 	}
-
+	
 	@Override
-	protected void onDestroy(){
-		super.onDestroy();
+	protected void onRestart() {
+		super.onRestart();
+        downloader.start();
+	}
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
 		if (downloader != null)
-			downloader.onDestroy();
+			downloader.stop();
 	}
 
 	@Override
@@ -128,7 +134,7 @@ public class RideListActivity extends ListActivity {
 			outState.putBoolean(SOME_INFO_KEY, someInfo);
 		}
 
-		public void onDestroy() {
+		public void stop() {
 			if (timer != null)
 				timer.cancel();
 		}
@@ -168,9 +174,13 @@ public class RideListActivity extends ListActivity {
 	        	System.err.println("----------");
 	        	ArrayList<User> pending = ratings.pendingReviews(new User("1111","marcos"));
 	        	System.err.println("the pending reviews for 1111:");
-	        	for (int i = 0;i<pending.size();i++) {
-	        		User user = pending.get(i);
-	        		System.err.println(user.uspNumber+" is pending");
+	        	if (pending == null)
+	        		System.err.println("could not be downloaded");
+	        	else {
+	        		for (int i = 0;i<pending.size();i++) {
+	        			User user = pending.get(i);
+	        			System.err.println(user.uspNumber+" is pending");
+	        		}
 	        	}
 	        	System.err.println("----------");
 	        	
@@ -221,6 +231,7 @@ public class RideListActivity extends ListActivity {
 
 		class UpdateTask extends TimerTask {
 			public void run() {
+				System.err.println("ran");
 				updateConnectedFlag();
 				if (connected) {
 					new DownloadJsonTask().execute(URL);

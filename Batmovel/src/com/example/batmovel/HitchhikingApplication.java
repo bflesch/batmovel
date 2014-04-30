@@ -102,7 +102,8 @@ public class HitchhikingApplication extends Application {
 	}
 	
 	public void stopGPS(){
-		locationManager.removeUpdates(locationListener);
+		if (locationListener != null)
+		    locationManager.removeUpdates(locationListener);
 		locationListener = null;
 	}
 }
