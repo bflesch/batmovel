@@ -356,9 +356,9 @@ public class RideListActivity extends ListActivity {
 	}
 
 	protected void sendInterestForRide(Ride boundRide) {
-		RideInterest rideInterest = new RideInterest(boundRide);
-		rideInterest.hitchhiker = User.getCurrentUser(getApplicationContext()).uspNumber;
-		rideInterest.message = "quero ir com você!";
+		Interest rideInterest = new Interest(boundRide);
+		rideInterest.nusp_rider = User.getCurrentUser(getApplicationContext()).uspNumber;
+		rideInterest.mensagem = "quero ir com você!";
 		UploadJsonTask uploader = new UploadJsonTask();
 		uploader.execute(rideInterest.toJsonString());
 		//TODO spinning for idleness
