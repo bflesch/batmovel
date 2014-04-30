@@ -1,4 +1,4 @@
-package com.example.batmovel;
+package br.usp.caronas;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;

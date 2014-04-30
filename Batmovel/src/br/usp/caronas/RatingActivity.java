@@ -1,6 +1,8 @@
-package com.example.batmovel;
+package br.usp.caronas;
 
 import java.util.ArrayList;
+
+import com.example.batmovel.R;
 
 import android.app.ListActivity;
 import android.content.Context;

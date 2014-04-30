@@ -1,6 +1,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.batmovel.LoginActivity" >
+    tools:context="br.usp.caronas.LoginActivity" >
 
     <LinearLayout
         style="@style/LoginFormContainer"

@@ -22,18 +22,18 @@
         android:maxSdkVersion="19" />
 
     <application
-        android:name="com.example.batmovel.HitchhikingApplication"
+        android:name="br.usp.caronas.HitchhikingApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_caronas_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
         <activity
-            android:name="com.example.batmovel.RideListActivity"
+            android:name="br.usp.caronas.RideListActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.batmovel.ModeChooser" >
+            android:parentActivityName="br.usp.caronas.ModeChooser" >
         </activity>
         <activity
-            android:name="com.example.batmovel.ModeChooser"
+            android:name="br.usp.caronas.ModeChooser"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,19 +42,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.batmovel.LoginActivity"
+            android:name="br.usp.caronas.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.example.batmovel.RideFormActivity"
+            android:name="br.usp.caronas.RideFormActivity"
             android:label="@string/title_activity_ride_form"
-            android:parentActivityName="com.example.batmovel.ModeChooser" >
+            android:parentActivityName="br.usp.caronas.ModeChooser" >
         </activity>
         <activity
-            android:name="com.example.batmovel.RatingActivity"
+            android:name="br.usp.caronas.RatingActivity"
             android:label="@string/title_activity_rating"
-            android:parentActivityName="com.example.batmovel.ModeChooser" >
+            android:parentActivityName="br.usp.caronas.ModeChooser" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.batmovel.ModeChooser" />
