@@ -1,4 +1,4 @@
-package com.example.batmovel;
+package br.usp.caronas;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -7,6 +7,8 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.example.batmovel.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

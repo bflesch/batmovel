@@ -1,4 +1,4 @@
-package com.example.batmovel;
+package br.usp.caronas;
 
 import android.annotation.SuppressLint;
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package com.example.batmovel;
+package br.usp.caronas;
 
 import org.json.JSONException;
 import org.json.JSONObject;

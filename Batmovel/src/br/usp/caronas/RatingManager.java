@@ -1,4 +1,4 @@
-package com.example.batmovel;
+package br.usp.caronas;
 
 import java.util.ArrayList;
 
