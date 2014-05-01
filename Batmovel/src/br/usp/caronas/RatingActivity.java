@@ -17,22 +17,22 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RatingActivity extends ListActivity {
 
 	public static final String URL_POST_RATING = "http://uspservices.deusanyjunior.dj/avaliacaodousuario";
 	private Timer timer;
+	private RatingListAdapter adapter;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rating);
-		RatingListAdapter rla = new RatingListAdapter();
-
-		rla.setData(new ArrayList<User>());
-		setListAdapter(rla);
-		rla.notifyDataSetChanged();
+		adapter = new RatingListAdapter();
+		setListAdapter(adapter);
+		(new Broccoli(adapter)).execute();
 	}
 	
 	public class Broccoli extends AsyncTask<Void, Void, ArrayList<User>> {
@@ -105,8 +105,15 @@ public class RatingActivity extends ListActivity {
 		float rating = rb.getRating();
 		User currentUser = User.getCurrentUser(getApplicationContext());
 		String jsonRating = RatingManager.getRatingJson(rating,currentUser);
-		//attempter.execute(jsonRating);
-		System.err.println(jsonRating); //TODO
+		attempter.execute(jsonRating);
+	}
+	
+	private void toast(String text){
+		Context context = getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 	
 	private class AttemptRatingTask extends AsyncTask<String, Void, Boolean> {
@@ -118,7 +125,12 @@ public class RatingActivity extends ListActivity {
 		}
 		@Override
 		protected void onPostExecute(Boolean result) {
-			//TODO wait for acceptance or maybe go to chat
+			if (result){
+				toast("Avaliação enviada com sucesso");
+				(new Broccoli(adapter)).execute();
+			} else {
+				toast("Erro ao enviar avaliação. Tente novamente.");
+			}
 		}
 	}
 	
@@ -130,12 +142,7 @@ public class RatingActivity extends ListActivity {
 		String errorMessage = "";
 
 		public void setData (ArrayList<User> newData){
-			//data = newData;
-			data = new ArrayList<User>();
-			User user = new User();
-			user.uspNumber = "1234567";
-			user.stoaLogin = "ahhah";
-			data.add(user);
+			data = newData;
 		}
 		
 		@Override

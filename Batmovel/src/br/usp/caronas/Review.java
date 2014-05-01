@@ -1,15 +1,13 @@
 package br.usp.caronas;
 
-import android.annotation.SuppressLint;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 
 public class Review {
 
@@ -17,13 +15,16 @@ public class Review {
        String other_login; 	   //    "userlogin":"login_de_quem_voce_vai_avaliar",
        String judge_nusp;       //    "judgeid":"numero_usp_do_avaliador",
        String judge_login;       //    "judgelogin":"login_do_avaliador",
-       String stars;       //    "stars":"quantidade_de_estrelas_ou_nota",
+       int stars;       //    "stars":"quantidade_de_estrelas_ou_nota",
        String message;       //    "message":"mensagem"}
    
 	@SuppressLint("SimpleDateFormat")
 	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 
+	public Review(){
+	}
+	
 	public Review(String jsonString) {
 		fromJsonString(jsonString);
 	}
@@ -53,7 +54,7 @@ public class Review {
 			this.other_login = object.getString("userlogin");
 			this.judge_nusp = object.getString("judgeid");
 			this.judge_login = object.getString("judgelogin");
-			this.stars = object.getString("stars");
+			this.stars = object.getInt("stars");
 			this.message = object.getString("message");
 		}
 		catch (JSONException e) {

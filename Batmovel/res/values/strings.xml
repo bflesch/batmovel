@@ -28,5 +28,9 @@
     <string name="title_activity_rating">Avaliar usuários</string>
     <string name="rate_users">Avaliar Usuários</string>
     <string name="no_ratings_available">Não há usuários a avaliar</string>
+    
+    
+    <string name="interest_sent">Pedido enviado!</string>
+    <string name="interest_not_sent">Pedido não enviado.\n Verifique sua conexão de Internet.</string>
 
 </resources>
