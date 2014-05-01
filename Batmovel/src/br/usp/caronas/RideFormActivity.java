@@ -32,7 +32,7 @@ public class RideFormActivity extends Activity {
 	public int selected_hour;
 	public int selected_minute;
 	
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

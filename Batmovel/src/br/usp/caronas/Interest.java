@@ -1,6 +1,7 @@
 package br.usp.caronas;
 
 import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class Interest {
 	public Interest(){
 	}
 
+	public Interest(Ride r){
+		this.ride_id = r.id;
+	}
+	
 	public Interest(String jsonString) {
 		fromJsonString(jsonString);
 	}
@@ -70,25 +75,22 @@ public class Interest {
 			e.printStackTrace();
 		}
 	}
-
-	public JSONObject toJSONObject() {
-		JSONObject json = new JSONObject();
-		JSONObject recordJson = new JSONObject();
+	
+	public String toJsonString(){
+		JSONObject interest = new JSONObject();
+		JSONObject wrapper = new JSONObject();
 		try {
-			recordJson.put("riderecord_id", ride_id);
-			recordJson.put("hitchhiker", nusp_rider);
-			recordJson.put("login", user_rider);
-			recordJson.put("actuallatitude", lat_atual_rider);
-			recordJson.put("actuallongitude", lon_atual_rider);
-			recordJson.put("message", mensagem);
-			json.put("interestintheride",recordJson);
-		} catch (JSONException e) {
+			interest.put("riderecord_id",ride_id);
+			interest.put("hitchhiker", nusp_rider);
+			interest.put("message", mensagem);
+			wrapper.put("interestintheride", interest);
+		} catch (JSONException e){
 			e.printStackTrace();
 		}
-		return json;
+		
+		System.err.println(wrapper.toString());
+		
+		return wrapper.toString();
 	}
 
-	public String toJsonString(){
-		return this.toJSONObject().toString();
-	}
 }
