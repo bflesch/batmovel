@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class RideListActivity extends ListActivity {
@@ -36,7 +37,7 @@ public class RideListActivity extends ListActivity {
 	protected JsonDownloader downloader;
 
 	final static String URL_POST = "http://uspservices.deusanyjunior.dj/interesseemcarona";
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,6 +94,16 @@ public class RideListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void toast (String text){
+		
+		Context context = getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+	}
+	
 	public class JsonDownloader {
 		private static final String URL =
 				"http://uspservices.deusanyjunior.dj/carona/3.json";
@@ -233,7 +244,7 @@ public class RideListActivity extends ListActivity {
 
 		class UpdateTask extends TimerTask {
 			public void run() {
-				System.err.println("ran");
+				System.err.println("ran");//TODO caralho pq demora tanto ?? O ran aparece mó rapido
 				updateConnectedFlag();
 				if (connected) {
 					new DownloadJsonTask().execute(URL);
@@ -371,12 +382,15 @@ public class RideListActivity extends ListActivity {
 			
 			//TODO funcionou?
 			WebClient wc = new WebClient(URL_POST);
-			wc.postJson(json_is_in_zero[0]);
-			return true;
+			//returns true if sucess
+			return wc.postJson(json_is_in_zero[0]);
 		}
 		@Override
 		protected void onPostExecute(Boolean result) {
-			//TODO wait for acceptance or maybe go to chat
+			if(result)
+				toast(getResources().getString(R.string.interest_sent));
+			else
+				toast(getResources().getString(R.string.interest_not_sent));
 		}
 	}
 }
