@@ -1,15 +1,4 @@
 package br.usp.caronas;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +17,17 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /* Modificado do gist 
  *       https://gist.github.com/SuelenGC/10788937
@@ -111,9 +111,6 @@ public class WebClient {
 			}
 			in.close();
 
-			//TODO remover
-			System.err.println(response.toString());
-
 			con.disconnect();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -155,7 +152,7 @@ public class WebClient {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
-		}catch (IOException e){
+		} catch (IOException e){
 			e.printStackTrace();
 			return null;
 		} catch (JSONException e){

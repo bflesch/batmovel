@@ -171,34 +171,7 @@ public class RideListActivity extends ListActivity {
 			String error = null;
 
 			@Override 
-			protected JSONObject doInBackground(String... urls) {
-				
-				
-				//TODO remover
-	        	RatingManager ratings = new RatingManager();
-	        	System.err.println("----------");
-	        	ArrayList<User> pending = ratings.pendingReviews(new User("1111","marcos"));
-	        	System.err.println("the pending reviews for 1111:");
-	        	if (pending == null)
-	        		System.err.println("could not be downloaded");
-	        	else {
-	        		for (int i = 0;i<pending.size();i++) {
-	        			User user = pending.get(i);
-	        			System.err.println(user.uspNumber+" is pending");
-	        		}
-	        	}
-	        	System.err.println("----------");
-	        	
-	        	System.err.println("5177188 avaliou 1111");
-	        	System.err.println(ratings.numberOfReviews("5177188", "1111"));
-	        	System.err.println("72... avaliou 1111");
-	        	System.err.println(ratings.numberOfReviews("7261561", "1111"));
-	        	System.err.println("111 avaliou 1111");
-	        	System.err.println(ratings.numberOfReviews("111", "1111"));
-	        	
-	        	System.err.println("----------");
-	        	//TODO remover outros println
-				
+			protected JSONObject doInBackground(String... urls) {				
 				WebClient wc = new WebClient(urls[0]);
 				JSONObject jsonResponse = wc.getJson();
 				if(jsonResponse == null) { 
@@ -264,10 +237,10 @@ public class RideListActivity extends ListActivity {
 		String errorMessage = "";
 
 		public boolean setData (JSONObject object){
-			data = Ride.listFromJsonList(object);
-			
-			if (data == null)
+			if (object == null)
 				return false;
+			
+			data = Ride.listFromJsonList(object);
 			
 			for(int i=(data.size()-1); i>=0; i--){
 				Ride ride = data.get(i);
