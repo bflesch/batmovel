@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -32,6 +33,7 @@ public class RideFormActivity extends Activity {
 	public int selected_hour;
 	public int selected_minute;
 	
+	@SuppressLint("SimpleDateFormat")
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
 	@Override

@@ -1,32 +1,23 @@
 package br.usp.caronas;
 
-import android.annotation.SuppressLint;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+
 public class Interest {
 
 	public int interest_id;
-	public int ride_id;
-    //"riderecord_id":"id_da_carona",
-    public String nusp_rider;
-    //"hitchhiker":"numero_usp_do_caroneiro",
-    public String user_rider;
-    //"login":"nome_de_usuario_no_stoa",
-    public String lat_atual_rider;
-    //"actuallatitude":"valor_da_latitude_atual_em_float",
-    public String lon_atual_rider;
-    //"actuallongitude":"valor_da_longitude_atual_em_float",
-    public String mensagem;
-    //"message":"mensagem"
+	public int ride_id; //"riderecord_id":"id_da_carona",
+    public String nusp_rider;  //"hitchhiker":"numero_usp_do_caroneiro",
+    public String user_rider;  //"login":"nome_de_usuario_no_stoa",
+    public String lat_atual_rider;  //"actuallatitude":"valor_da_latitude_atual_em_float",
+    public String lon_atual_rider;  //"actuallongitude":"valor_da_longitude_atual_em_float",
+    public String mensagem;   //"message":"mensagem"
 
 	@SuppressLint("SimpleDateFormat")
 	static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -87,8 +78,6 @@ public class Interest {
 		} catch (JSONException e){
 			e.printStackTrace();
 		}
-		
-		System.err.println(wrapper.toString());
 		
 		return wrapper.toString();
 	}

@@ -2,7 +2,6 @@ package br.usp.caronas;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RatingManager {

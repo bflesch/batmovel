@@ -61,7 +61,7 @@ public class Review {
 			e.printStackTrace();
 		}
 	}
-    // TODO breno, use e diga se funciona =P
+
 	public JSONObject toJSONObject() {
 		JSONObject json = new JSONObject();
 		JSONObject recordJson = new JSONObject();
