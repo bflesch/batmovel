@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Caronas USP</string>
-    <string name="button_send">Enviar oferta</string>
+    <string name="button_send">Publicar</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_mode_chooser">Caronas USP</string>
     <string name="hitch_ride">Pegar Carona</string>
@@ -28,6 +28,7 @@
     <string name="title_activity_rating">Avaliar usuários</string>
     <string name="rate_users">Avaliar Usuários</string>
     <string name="no_ratings_available">Não há usuários a avaliar</string>
+    <string name="no_ratings_yet">Lista de avaliações ainda não foi carregada</string>
     
     
     <string name="interest_sent">Pedido enviado!</string>

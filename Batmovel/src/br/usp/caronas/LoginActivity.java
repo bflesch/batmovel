@@ -104,11 +104,6 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid login, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
-	 */
 	public void attemptLogin() {
 		if (mAuthTask != null) {
 			return;
@@ -203,10 +198,6 @@ public class LoginActivity extends Activity {
 		User.login(getApplicationContext(), currentUser);
 	}
 
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
 		private static final String AUTHENTICATION_URL = "https://maxwell.stoa.usp.br/plugin/stoa/authenticate/";
 

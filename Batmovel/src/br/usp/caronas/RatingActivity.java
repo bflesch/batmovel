@@ -32,17 +32,11 @@ public class RatingActivity extends ListActivity {
 		setContentView(R.layout.activity_rating);
 		adapter = new RatingListAdapter();
 		setListAdapter(adapter);
-		(new Broccoli(adapter)).execute();
+		(new UpdateRatingListTask()).execute();
 	}
 	
-	public class Broccoli extends AsyncTask<Void, Void, ArrayList<User>> {
-		
-		RatingListAdapter rlyeh;
-		
-		public Broccoli(RatingListAdapter rlyeh){
-			this.rlyeh = rlyeh;
-		}
-		
+	public class UpdateRatingListTask extends AsyncTask<Void, Void, ArrayList<User>> {
+			
 		public ArrayList<User> doInBackground(Void... voids){
 			return (new RatingManager()).pendingReviews(User.getCurrentUser(getApplicationContext()));
 		}
@@ -57,8 +51,8 @@ public class RatingActivity extends ListActivity {
 				tv.setText(R.string.no_ratings_available);
 			}
 			else {
-				rlyeh.setData(usersToRate);
-				rlyeh.notifyDataSetChanged();
+				adapter.setData(usersToRate);
+				adapter.notifyDataSetChanged();
 			}
 		}
 		
@@ -127,7 +121,7 @@ public class RatingActivity extends ListActivity {
 		protected void onPostExecute(Boolean result) {
 			if (result){
 				toast("Avaliação enviada com sucesso");
-				(new Broccoli(adapter)).execute();
+				(new UpdateRatingListTask()).execute();
 			} else {
 				toast("Erro ao enviar avaliação. Tente novamente.");
 			}
