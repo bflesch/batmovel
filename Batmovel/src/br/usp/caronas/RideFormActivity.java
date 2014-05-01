@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.example.batmovel.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;

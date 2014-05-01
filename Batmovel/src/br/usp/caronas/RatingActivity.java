@@ -1,8 +1,7 @@
 package br.usp.caronas;
 
 import java.util.ArrayList;
-
-import com.example.batmovel.R;
+import java.util.Timer;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 public class RatingActivity extends ListActivity {
 
 	public static final String URL_POST_RATING = "http://uspservices.deusanyjunior.dj/avaliacaodousuario";
+	private Timer timer;
 
 
 	@Override
@@ -29,8 +29,45 @@ public class RatingActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rating);
 		RatingListAdapter rla = new RatingListAdapter();
-		rla.setData(null);
+
+		rla.setData(new ArrayList<User>());
 		setListAdapter(rla);
+		rla.notifyDataSetChanged();
+	}
+	
+	public class Broccoli extends AsyncTask<Void, Void, ArrayList<User>> {
+		
+		RatingListAdapter rlyeh;
+		
+		public Broccoli(RatingListAdapter rlyeh){
+			this.rlyeh = rlyeh;
+		}
+		
+		public ArrayList<User> doInBackground(Void... voids){
+			return (new RatingManager()).pendingReviews(User.getCurrentUser(getApplicationContext()));
+		}
+		
+		public void onPostExecute(ArrayList<User> usersToRate){
+			if (usersToRate == null){
+				TextView tv = (TextView) findViewById(android.R.id.empty);
+				tv.setText(R.string.connection_error);
+			}
+			else if (usersToRate.isEmpty()){
+				TextView tv = (TextView) findViewById(android.R.id.empty);
+				tv.setText(R.string.no_ratings_available);
+			}
+			else {
+				rlyeh.setData(usersToRate);
+				rlyeh.notifyDataSetChanged();
+			}
+		}
+		
+	};
+	
+	protected void onDestroy() {
+		super.onDestroy();
+		if (timer != null)
+			timer.cancel();
 	}
 
 	@Override

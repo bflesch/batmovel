@@ -1,7 +1,5 @@
 package br.usp.caronas;
 
-import com.example.batmovel.R;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
