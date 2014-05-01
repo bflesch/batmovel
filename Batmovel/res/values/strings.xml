@@ -30,7 +30,7 @@
     <string name="no_ratings_available">Não há usuários a avaliar</string>
     
     
-    <string name="interest_sent">OK. Seu pedido foi enviado</string>
-    <string name="interest_not_sent">pedido não enviado.\n A internet tá funcionando ?</string>
+    <string name="interest_sent">Pedido enviado!</string>
+    <string name="interest_not_sent">Pedido não enviado.\n Verifique sua conexão de Internet.</string>
 
 </resources>

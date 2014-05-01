@@ -2,7 +2,6 @@ package br.usp.caronas;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RatingManager {
@@ -57,25 +56,17 @@ public class RatingManager {
 
 
 	public static String getRatingJson(float rating, User currentuser) {
-		JSONObject json;
-		try{
-			json = new JSONObject();
-			json.put("userid", userToRate.uspNumber);
-			json.put("userlogin", userToRate.stoaLogin);
-			json.put("judgeid", currentuser.uspNumber);
-			json.put("judgelogin", currentuser.stoaLogin);
-			json.put("stars", (int)rating);
-			json.put("message", "rating test");
-
-			JSONObject wrapper = new JSONObject();
-			wrapper.put("reviewuser", json.toString());
-
-			return wrapper.toString();
-		}
-		catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		}
+		
+		Review r = new Review();
+		
+		r.judge_login = currentuser.stoaLogin;
+		r.judge_nusp = currentuser.uspNumber;
+		r.other_login = userToRate.stoaLogin;
+		r.other_nusp = userToRate.uspNumber;
+		r.stars = (int)rating;
+		r.message = "rating test";
+		
+		return r.toJsonString();
 	}
 
 
