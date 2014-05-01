@@ -81,6 +81,10 @@ public class HitchhikingApplication extends Application {
 		@SuppressWarnings("unused")
 		int twenty_seconds = 20 * 1000;
 		
+		BatteryLevelReceiver battery = new BatteryLevelReceiver(); 
+		if (battery.batteryDying())
+			return;
+		
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
 		locationListener = new LocationListener() {
