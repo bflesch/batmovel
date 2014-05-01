@@ -20,6 +20,10 @@
     <uses-permission
         android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:maxSdkVersion="19" />
+    <uses-permission
+        android:name="android.permission.PROCESS_OUTGOING_CALLS"
+        android:maxSdkVersion="19" />
+    
 
     <application
         android:name="br.usp.caronas.HitchhikingApplication"
@@ -59,6 +63,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.batmovel.ModeChooser" />
         </activity>
+    
+    <receiver android:name="br.usp.caronas.BatteryLevelReceiver" >
+        <intent-filter>
+            <action android:name="android.intent.action.ACTION_BATTERY_LOW" />
+            <action android:name="android.intent.action.ACTION_BATTERY_OKAY" />
+        </intent-filter>
+    </receiver>
+    
     </application>
-
 </manifest>
